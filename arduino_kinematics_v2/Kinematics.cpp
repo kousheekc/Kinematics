@@ -62,7 +62,11 @@ float** Kinematics::forward(float* joint_angles) {
 }
 
 float* Kinematics::inverse(float** T, float* thetalist0, float eomg, float ev) {
-
+    float* thetalist = thetalist0;
+    int i = 0;
+    int maxiterations = 20;
+    float** Tsb = forward(thetalist);
+    float* Vs = utils.mul_vector(utils.adjoint(Tsb), utils.se3_to_vec(utils.log6(utils.mul_matrix(utils.inverse(Tsb), T, 4))), 6);
 }
 
 float** Kinematics::jacobian(float* joint_angles) {

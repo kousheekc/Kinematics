@@ -29,7 +29,7 @@ void setup() {
     m[3][2] = 0;
     m[3][3] = 1;
 
-    float** result = utils.log6(m);
+    float** result = utils.inverse(m);
     utils.print_mat(result, 4);
 
     // kin.add_joint_axis(0, 0, 1, 0, 0.2, 0.2);

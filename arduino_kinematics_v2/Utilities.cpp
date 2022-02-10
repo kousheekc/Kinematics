@@ -79,6 +79,17 @@ float** Utilities::transpose(float** mat, int n) {
     return result;
 }
 
+float** Utilities::inverse(float** trn_mat) {
+    float** r = get_rot_mat(trn_mat);
+    float* p = get_pos_vec(trn_mat);
+    float** r_result = transpose(r, 3);
+    float* p_result = mul_vector(r_result, p, 3);
+    for (int i = 0; i < 3; i++) {
+        p_result[i] = -p_result[i];
+    }
+    return create_trn_mat(r_result, p_result);
+}
+
 float** Utilities::zero(float** mat, int n, int m) {
     if (m == 0) {
         m = n;

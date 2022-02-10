@@ -17,6 +17,7 @@ class Utilities {
         float** create_trn_mat(float** rot_mat, float* pos_vec);
         float trace(float** mat, int n);
         float** transpose(float** mat, int n);
+        float** inverse(float** trn_mat);
         float** zero(float** mat, int n, int m=0);
         float** adjoint(float** trn_mat);
         float** exp3(float** rot_mat);
