@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import VERSION
 import numpy as np
 
 '''
@@ -338,8 +339,6 @@ def MatrixLog6(T):
                      [[0, 0, 0, 0]]]
     else:
         theta = np.arccos((np.trace(R) - 1) / 2.0)
-        print((1.0 / theta - 1.0 / np.tan(theta / 2.0) / 2) \
-                              * np.dot(omgmat,omgmat) / theta)
         return np.r_[np.c_[omgmat,
                            np.dot(np.eye(3) - omgmat / 2.0 \
                            + (1.0 / theta - 1.0 / np.tan(theta / 2.0) / 2) \
@@ -612,12 +611,8 @@ def JacobianSpace(Slist, thetalist):
     Js = np.array(Slist).copy().astype(np.float)
     T = np.eye(4)
     for i in range(1, len(thetalist)):
-        print(i)
         T = np.dot(T, MatrixExp6(VecTose3(np.array(Slist)[:, i - 1] \
                                 * thetalist[i - 1])))
-        print(T)
-        print(np.array(Slist)[:, i])
-        print()
         Js[:, i] = np.dot(Adjoint(T), np.array(Slist)[:, i])
     return Js
 
@@ -736,6 +731,7 @@ def IKinSpace(Slist, M, T, thetalist0, eomg, ev):
     Tsb = FKinSpace(M,Slist, thetalist)
     Vs = np.dot(Adjoint(Tsb), \
                 se3ToVec(MatrixLog6(np.dot(TransInv(Tsb), T))))
+    print(Vs)
     err = np.linalg.norm([Vs[0], Vs[1], Vs[2]]) > eomg \
           or np.linalg.norm([Vs[3], Vs[4], Vs[5]]) > ev
     while err and i < maxiterations:
@@ -751,9 +747,19 @@ def IKinSpace(Slist, M, T, thetalist0, eomg, ev):
     return (thetalist, not err)
 
 
-T = np.array([[1, 0,  0, 0],
-                [0, 0, -1, 0],
-                [0, 1,  0, 3],
-                [0, 0,  0, 1]])
+Slist = np.array([[0, 0,  1,  4, 0,    0],
+                    [0, 0,  0,  0, 1,    0],
+                    [0, 0, -1, -6, 0, -0.1]]).T
+M = np.array([[-1, 0,  0, 0],
+                [ 0, 1,  0, 6],
+                [ 0, 0, -1, 2],
+                [ 0, 0,  0, 1]])
+T = np.array([[0, 1,  0,     -5],
+                [1, 0,  0,      4],
+                [0, 0, -1, 1.6858],
+                [0, 0,  0,      1]])
+thetalist0 = np.array([1.5, 2.5, 3])
+eomg = 0.01
+ev = 0.001
 
-print(MatrixLog6(T))
+print(IKinSpace(Slist, M, T, thetalist0, eomg, ev))

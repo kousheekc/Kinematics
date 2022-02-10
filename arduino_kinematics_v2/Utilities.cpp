@@ -90,6 +90,10 @@ float** Utilities::inverse(float** trn_mat) {
     return create_trn_mat(r_result, p_result);
 }
 
+float** Utilities::pseudo_inverse(float** mat) {
+
+}
+
 float** Utilities::zero(float** mat, int n, int m) {
     if (m == 0) {
         m = n;
@@ -438,8 +442,29 @@ float* Utilities::div_scalar(float* vec, float s, int n) {
     return result;
 }
 
-float* Utilities::mul_vector(float* vec1, float* vec2, int n) {
+float* Utilities::add_vector(float* vec1, float* vec2, int n) {
+    float* result = create_vec(n);
+    for (int i = 0; i < n; i++) {
+        result[i] = vec1[i] + vec2[i];
+    }
+    return result;
+}
 
+
+float* Utilities::mul_vector(float* vec1, float* vec2, int n) {
+    float* result = create_vec(n);
+    for (int i = 0; i < n; i++) {
+        result[i] = vec1[i] * vec2[i];
+    }
+    return result;
+}
+
+float Utilities::dot_vector(float* vec1, float* vec2, int n) {
+    float result = 0;
+    for (int i = 0; i < n; i++) {
+        result += vec1[i] * vec2[i];
+    }
+    return result;
 }
 
 // Matrix vector related methods

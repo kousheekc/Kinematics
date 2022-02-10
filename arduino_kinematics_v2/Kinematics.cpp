@@ -67,6 +67,32 @@ float* Kinematics::inverse(float** T, float* thetalist0, float eomg, float ev) {
     int maxiterations = 20;
     float** Tsb = forward(thetalist);
     float* Vs = utils.mul_vector(utils.adjoint(Tsb), utils.se3_to_vec(utils.log6(utils.mul_matrix(utils.inverse(Tsb), T, 4))), 6);
+    
+    float* w = utils.create_vec(3);
+    w[0] = Vs[0];
+    w[1] = Vs[1];
+    w[2] = Vs[2];
+    float* v = utils.create_vec(3);
+    v[0] = Vs[0];
+    v[1] = Vs[1];
+    v[2] = Vs[2];
+
+    while (((utils.norm(w) > eomg) || (utils.norm(v) > ev)) && (i < maxiterations)) {
+        thetalist = utils.add_vector(thetalist, utils.mul_vector(utils.pseudo_inverse(jacobian(thetalist)), Vs, 6), 6);
+        i = i + 1;
+        Tsb = forward(thetalist);
+        Vs = utils.mul_vector(utils.adjoint(Tsb), utils.se3_to_vec(utils.log6(utils.mul_matrix(utils.inverse(Tsb), T, 4))), 6);
+        
+        w = utils.create_vec(3);
+        w[0] = Vs[0];
+        w[1] = Vs[1];
+        w[2] = Vs[2];
+        v = utils.create_vec(3);
+        v[0] = Vs[0];
+        v[1] = Vs[1];
+        v[2] = Vs[2];
+    }
+
 }
 
 float** Kinematics::jacobian(float* joint_angles) {

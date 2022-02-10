@@ -18,6 +18,7 @@ class Utilities {
         float trace(float** mat, int n);
         float** transpose(float** mat, int n);
         float** inverse(float** trn_mat);
+        float** pseudo_inverse(float** mat);
         float** zero(float** mat, int n, int m=0);
         float** adjoint(float** trn_mat);
         float** exp3(float** rot_mat);
@@ -46,7 +47,9 @@ class Utilities {
         float* sub_scalar(float* vec, float s, int n);
         float* mul_scalar(float* vec, float s, int n);
         float* div_scalar(float* vec, float s, int n);
+        float* add_vector(float* vec1, float* vec2, int n);
         float* mul_vector(float* vec1, float* vec2, int n);
+        float dot_vector(float* vec1, float* vec2, int n);
 
         // Matrix vector related methods
         float** vec_to_so3(float* pos_vec);
