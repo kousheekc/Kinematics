@@ -91,7 +91,24 @@ float** Utilities::trn_mat_inverse(float** trn_mat) {
 }
 
 float** Utilities::get_cofactor(float** mat, int p, int q, int n) {
+    float** result = create_mat(n-1);
+    int row = 0;
+    int col = 0;
 
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i != p && j != q) {
+                result[row][col] = mat[i][j];
+                col++;
+                if (col == n-1) {
+                    col = 0;
+                    row++;
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
 float Utilities::determinant(float** mat) {
@@ -103,7 +120,7 @@ float** Utilities::adj(float** mat) {
 }
 
 float** Utilities::inverse(float** mat) {
-    
+
 }
 
 float** Utilities::pseudo_inverse(float** mat) {
