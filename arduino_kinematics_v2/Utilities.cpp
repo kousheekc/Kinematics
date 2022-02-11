@@ -111,15 +111,25 @@ float** Utilities::get_cofactor(float** mat, int p, int q, int n) {
     return result;
 }
 
-float Utilities::determinant(float** mat) {
+float Utilities::determinant(float** mat, int n) {
+    float d = 0;
+    if (n == 1) {
+        return mat[0][0];
+    }
+    int sign = 1;
+    for (int i = 0; i < n; i++) {
+        float** temp = get_cofactor(mat, 0, i, n);
+        d += sign * mat[0][i] * determinant(temp, n-1);
+        sign = -sign;
+    }
+    return d;
+}
+
+float** Utilities::adj(float** mat, int n) {
 
 }
 
-float** Utilities::adj(float** mat) {
-
-}
-
-float** Utilities::inverse(float** mat) {
+float** Utilities::inverse(float** mat, int n) {
 
 }
 

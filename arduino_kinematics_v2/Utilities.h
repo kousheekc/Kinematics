@@ -20,8 +20,8 @@ class Utilities {
         float** trn_mat_inverse(float** trn_mat);
         float** get_cofactor(float** mat, int p, int q, int n);
         float determinant(float** mat, int n);
-        float** adj(float** mat);
-        float** inverse(float** mat);
+        float** adj(float** mat, int n);
+        float** inverse(float** mat, int n);
         float** pseudo_inverse(float** mat);
         float** zero(float** mat, int n, int m=0);
         float** adjoint(float** trn_mat);
