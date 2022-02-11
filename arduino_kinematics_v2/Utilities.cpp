@@ -79,7 +79,7 @@ float** Utilities::transpose(float** mat, int n) {
     return result;
 }
 
-float** Utilities::inverse(float** trn_mat) {
+float** Utilities::trn_mat_inverse(float** trn_mat) {
     float** r = get_rot_mat(trn_mat);
     float* p = get_pos_vec(trn_mat);
     float** r_result = transpose(r, 3);
@@ -88,6 +88,22 @@ float** Utilities::inverse(float** trn_mat) {
         p_result[i] = -p_result[i];
     }
     return create_trn_mat(r_result, p_result);
+}
+
+float** Utilities::get_cofactor(float** mat, int p, int q, int n) {
+
+}
+
+float Utilities::determinant(float** mat) {
+
+}
+
+float** Utilities::adj(float** mat) {
+
+}
+
+float** Utilities::inverse(float** mat) {
+    
 }
 
 float** Utilities::pseudo_inverse(float** mat) {
