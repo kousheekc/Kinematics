@@ -78,7 +78,7 @@ float* Kinematics::inverse(float** T, float* thetalist0, float eomg, float ev) {
     v[2] = Vs[2];
 
     while (((utils.norm(w) > eomg) || (utils.norm(v) > ev)) && (i < maxiterations)) {
-        thetalist = utils.add_vector(thetalist, utils.mul_vector(utils.pseudo_inverse(jacobian(thetalist)), Vs, 6), 6);
+        thetalist = utils.add_vector(thetalist, utils.mul_vector(utils.pseudo_inverse(jacobian(thetalist), 0, 0), Vs, 6), 6);
         i = i + 1;
         Tsb = forward(thetalist);
         Vs = utils.mul_vector(utils.adjoint(Tsb), utils.se3_to_vec(utils.log6(utils.mul_matrix(utils.trn_mat_inverse(Tsb), T, 4))), 6);

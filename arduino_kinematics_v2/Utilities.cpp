@@ -76,7 +76,7 @@ float** Utilities::transpose(float** mat, int n, int m) {
     float** result = create_mat(m, n);
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            result[i][j] = mat[j][i];
+            result[j][i] = mat[i][j];
         }
     }
     return result;
@@ -141,7 +141,7 @@ float** Utilities::adj(float** mat, int n) {
         for (int j = 0; j < n; j++) {
             float** temp = get_cofactor(mat, i, j, n);
             sign = ((i + j) % 2 == 0) ? 1 : -1;
-            result[i][j] = (sign) * (determinant(temp, n-1));
+            result[j][i] = (sign) * (determinant(temp, n-1));
         }
     }
     return result;
@@ -153,17 +153,18 @@ float** Utilities::inverse(float** mat, int n) {
         Serial.println("Singular matrix");
         return NULL;
     }
-    float** adj = adj(mat, n);
-    float** result = div_scalar(adj, det, n);
+    float** adj_mat = adj(mat, n);
+    float** result = div_scalar(adj_mat, det, n);
     return result;
 }
 
 float** Utilities::pseudo_inverse(float** mat, int rows, int cols) {
+    float ** result = create_mat(4);
     if (rows > cols) {
-
+        return result;
     }
     else {
-
+        return result;
     }
 }
 
