@@ -69,10 +69,13 @@ float Utilities::trace(float** mat, int n) {
     return sum;
 }
 
-float** Utilities::transpose(float** mat, int n) {
-    float** result = create_mat(n);
+float** Utilities::transpose(float** mat, int n, int m) {
+    if (m == 0) {
+        m = n;
+    }
+    float** result = create_mat(m, n);
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < m; j++) {
             result[i][j] = mat[j][i];
         }
     }
@@ -155,8 +158,13 @@ float** Utilities::inverse(float** mat, int n) {
     return result;
 }
 
-float** Utilities::pseudo_inverse(float** mat) {
+float** Utilities::pseudo_inverse(float** mat, int rows, int cols) {
+    if (rows > cols) {
 
+    }
+    else {
+
+    }
 }
 
 float** Utilities::zero(float** mat, int n, int m) {

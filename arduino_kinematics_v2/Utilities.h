@@ -16,13 +16,13 @@ class Utilities {
         float* get_pos_vec(float** trn_mat);
         float** create_trn_mat(float** rot_mat, float* pos_vec);
         float trace(float** mat, int n);
-        float** transpose(float** mat, int n);
+        float** transpose(float** mat, int n, int m=0);
         float** trn_mat_inverse(float** trn_mat);
         float** get_cofactor(float** mat, int p, int q, int n);
         float determinant(float** mat, int n);
         float** adj(float** mat, int n);
         float** inverse(float** mat, int n);
-        float** pseudo_inverse(float** mat);
+        float** pseudo_inverse(float** mat, int rows, int cols);
         float** zero(float** mat, int n, int m=0);
         float** adjoint(float** trn_mat);
         float** exp3(float** rot_mat);
