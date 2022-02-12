@@ -37,7 +37,7 @@ class Utilities {
         float** div_scalar(float** mat, float s, int n);
         float** add_matrix(float** mat1, float** mat2, int n);
         float** sub_matrix(float** mat1, float** mat2, int n);
-        float** mul_matrix(float** mat1, float** mat2, int n);
+        float** mul_matrix(float** mat1, float** mat2, int r1, int c1=0, int r2=0, int c2=0);
         float* mul_vector(float** mat, float* vec, int n);
 
         // Vector related methods

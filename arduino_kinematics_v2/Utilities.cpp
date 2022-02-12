@@ -160,11 +160,11 @@ float** Utilities::inverse(float** mat, int n) {
 
 float** Utilities::pseudo_inverse(float** mat, int rows, int cols) {
     float ** result = create_mat(4);
-    if (rows > cols) {
-        return result;
+    if (rows < cols) {
+        A+ = A_t * (A * A_t)^-1
     }
     else {
-        return result;
+        A+ = (A_t * A)^-1 * A_t
     }
 }
 
@@ -413,16 +413,18 @@ float** Utilities::sub_matrix(float** mat1, float** mat2, int n) {
     return result;
 }
 
-float** Utilities::mul_matrix(float** mat1, float** mat2, int n) {
-    float** result = create_mat(n);
-
-    for (int i = 0; i < n; i++) {
-        result[i][i] = 0;
+float** Utilities::mul_matrix(float** mat1, float** mat2, int r1, int c1, int r2, int c2) {
+    if (c1 == 0 && r2 == 0 && c2 == 0) {
+        c1 = r1;
+        r2 = r1;
+        c2 = r1;
     }
+    float** result = create_mat(r1, c2);
+    result = zero(result, r1, c2);
     
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            for (int k = 0; k < n; k++) {
+    for (int i = 0; i < r1; i++) {
+        for (int j = 0; j < c2; j++) {
+            for (int k = 0; k < c1; k++) {
                 result[i][j] += mat1[i][k] * mat2[k][j];
             }
         }
