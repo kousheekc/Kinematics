@@ -83,10 +83,8 @@ float** Utilities::transpose(float** mat, int n, int m) {
 }
 
 float** Utilities::trn_mat_inverse(float** trn_mat) {
-    float** r = get_rot_mat(trn_mat);
-    float* p = get_pos_vec(trn_mat);
-    float** r_result = transpose(r, 3);
-    float* p_result = mul_vector(r_result, p, 3);
+    float** r_result = transpose(get_rot_mat(trn_mat), 3);
+    float* p_result = mul_vector(r_result, get_pos_vec(trn_mat), 3);
     for (int i = 0; i < 3; i++) {
         p_result[i] = -p_result[i];
     }
@@ -187,7 +185,7 @@ float** Utilities::adjoint(float** trn_mat) {
     float** result = create_mat(6);
 
     float** rot_mat = get_rot_mat(trn_mat);
-    float** so3 = vec_to_se3(get_pos_vec(trn_mat));
+    float** so3 = vec_to_so3(get_pos_vec(trn_mat));
 
     float** bottom_left = mul_matrix(so3, rot_mat, 3);
 
