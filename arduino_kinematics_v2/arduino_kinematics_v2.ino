@@ -60,32 +60,20 @@ void setup() {
     // float** result = kin.forward(joint_angles);
     // utils.print_mat(result, 4);
 
-    float** m = utils.create_mat(4);
-    m[0][0] = 5;
-    m[0][1] = -2;
-    m[0][2] = 2;
-    m[0][3] = 7;
+    float** m = utils.create_mat(2, 3);
+    m[0][0] = 6;
+    m[0][1] = 7;
+    m[0][2] = 8;
 
     m[1][0] = 1;
-    m[1][1] = 0;
-    m[1][2] = 0;
-    m[1][3] = 3;
+    m[1][1] = 2;
+    m[1][2] = 3;
 
-    m[2][0] = -3;
-    m[2][1] = 1;
-    m[2][2] = 5;
-    m[2][3] = 0;
+    utils.print_mat(m, 2, 3);
     
-    m[3][0] = 3;
-    m[3][1] = -1;
-    m[3][2] = -9;
-    m[3][3] = 4;
+    float** m_pinv = utils.pseudo_inverse(m, 2, 3);
 
-    utils.print_mat(m, 4);
-    
-    float** m_inv = utils.inverse(m, 4);
-
-    utils.print_mat(m_inv, 4);
+    utils.print_mat(m_pinv, 3, 2);
 }
 
 void loop() {

@@ -159,12 +159,15 @@ float** Utilities::inverse(float** mat, int n) {
 }
 
 float** Utilities::pseudo_inverse(float** mat, int rows, int cols) {
-    float ** result = create_mat(4);
     if (rows < cols) {
-        A+ = A_t * (A * A_t)^-1
+        // A+ = A_t * (A * A_t)^-1
+        float** result = mul_matrix(transpose(mat, rows, cols), inverse(mul_matrix(mat, transpose(mat, rows, cols), rows, cols, cols, rows), rows), cols, rows, rows, cols); 
+        return result;
     }
     else {
-        A+ = (A_t * A)^-1 * A_t
+        // A+ = (A_t * A)^-1 * A_t
+        float** result = mul_matrix(inverse(mul_matrix(transpose(mat, rows, cols), mat, cols, rows, rows, cols), cols), transpose(mat, rows, cols), rows, cols, cols, rows);
+        return result;
     }
 }
 
