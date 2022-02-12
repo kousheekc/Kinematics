@@ -126,11 +126,33 @@ float Utilities::determinant(float** mat, int n) {
 }
 
 float** Utilities::adj(float** mat, int n) {
+    float** result = create_mat(n);
+    if (n == 1) {
+        result[0][0] = 1;
+        return result;
+    }
+    
+    int sign = 1;
 
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            float** temp = get_cofactor(mat, i, j, n);
+            sign = ((i + j) % 2 == 0) ? 1 : -1;
+            result[i][j] = (sign) * (determinant(temp, n-1));
+        }
+    }
+    return result;
 }
 
 float** Utilities::inverse(float** mat, int n) {
-
+    float det = determinant(mat, n);
+    if (det == 0) {
+        Serial.println("Singular matrix");
+        return NULL;
+    }
+    float** adj = adj(mat, n);
+    float** result = div_scalar(adj, det, n);
+    return result;
 }
 
 float** Utilities::pseudo_inverse(float** mat) {
