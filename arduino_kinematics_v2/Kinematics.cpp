@@ -92,7 +92,7 @@ float* Kinematics::inverse(float** T, float* thetalist0, float eomg, float ev) {
         v[1] = Vs[1];
         v[2] = Vs[2];
     }
-
+    return thetalist;
 }
 
 float** Kinematics::jacobian(float* joint_angles) {
