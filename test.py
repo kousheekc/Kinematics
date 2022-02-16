@@ -302,7 +302,7 @@ def MatrixExp6(se3mat):
                   [  0,   0,    0,   1]])
     """
     se3mat = np.array(se3mat)
-    omgtheta = so3ToVec(se3mat[0: 3, 0: 3])
+    omgtheta = so3ToVec(se3mat[0: 3, 0: 3])  
     if NearZero(np.linalg.norm(omgtheta)):
         return np.r_[np.c_[np.eye(3), se3mat[0: 3, 3]], [[0, 0, 0, 1]]]
     else:
@@ -548,8 +548,7 @@ def FKinSpace(M, Slist, thetalist):
     """
     T = np.array(M)
     for i in range(len(thetalist) - 1, -1, -1):
-        T = np.dot(MatrixExp6(VecTose3(np.array(Slist)[:, i] \
-                                       * thetalist[i])), T)
+        T = np.dot(MatrixExp6(VecTose3(np.array(Slist)[:, i] * thetalist[i])), T)
     return T
 
 '''
@@ -731,7 +730,6 @@ def IKinSpace(Slist, M, T, thetalist0, eomg, ev):
     Tsb = FKinSpace(M,Slist, thetalist)
     Vs = np.dot(Adjoint(Tsb), \
                 se3ToVec(MatrixLog6(np.dot(TransInv(Tsb), T))))
-    print(Vs)
     err = np.linalg.norm([Vs[0], Vs[1], Vs[2]]) > eomg \
           or np.linalg.norm([Vs[3], Vs[4], Vs[5]]) > ev
     while err and i < maxiterations:
@@ -747,19 +745,18 @@ def IKinSpace(Slist, M, T, thetalist0, eomg, ev):
     return (thetalist, not err)
 
 
-Slist = np.array([[0, 0,  1,  4, 0,    0],
-                    [0, 0,  0,  0, 1,    0],
-                    [0, 0, -1, -6, 0, -0.1]]).T
-M = np.array([[-1, 0,  0, 0],
-                [ 0, 1,  0, 6],
-                [ 0, 0, -1, 2],
-                [ 0, 0,  0, 1]])
-T = np.array([[0, 1,  0,     -5],
-                [1, 0,  0,      4],
-                [0, 0, -1, 1.6858],
-                [0, 0,  0,      1]])
-thetalist0 = np.array([1.5, 2.5, 3])
-eomg = 0.01
-ev = 0.001
+M = np.array([[0, 0, 1, 374],
+              [0, -1, 0, 0],
+              [1, 0, 0, 630],
+              [0, 0, 0, 1]])
+Slist = np.array([[0, 0, 1, 0, 0, 0],
+                  [0, 1, 0, -290, 0, 0],
+                  [0, 1, 0, -560, 0, 0],
+                  [1, 0, 0, 0, 630, 0],
+                  [0, 1, 0, -302, 0, 630],
+                  [1, 0, 0, 0, 630, 0]]).T
+thetalist = np.array([0, 0, 0, 0, 0, 0])
 
-print(IKinSpace(Slist, M, T, thetalist0, eomg, ev))
+
+
+print(np.round(FKinSpace(M, Slist, thetalist), 2))
