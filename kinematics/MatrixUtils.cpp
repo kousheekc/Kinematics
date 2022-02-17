@@ -71,6 +71,10 @@ void MatrixUtils::create_trn_mat(float* rot_mat, float* pos_vec, float* trn_mat)
     trn_mat[4 * 3 + 3] = 1;
 }
 
+void MatrixUtils::adjoint(float* mat, float* result) {
+    
+}
+
 float MatrixUtils::norm(float* vec) {
     return sqrt(sq(vec[0]) + sq(vec[1]) + sq(vec[2]));
 }
