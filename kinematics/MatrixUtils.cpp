@@ -72,7 +72,35 @@ void MatrixUtils::create_trn_mat(float* rot_mat, float* pos_vec, float* trn_mat)
 }
 
 void MatrixUtils::adjoint(float* mat, float* result) {
-    
+    float rot_mat[3][3];
+    float pos_vec[3];
+    float so3[3][3];
+    float bottom_left[3][3];
+
+    zero((float*)result, 6, 6);
+    get_rot_mat((float*)mat, (float*)rot_mat);
+    get_pos_vec((float*)mat, pos_vec);
+    vec_to_so3(pos_vec, (float*)so3);
+
+    mul_matrix((float*)so3, (float*)rot_mat, 3, 3, 3, 3, (float*)bottom_left);
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            result[6 * i + j] = rot_mat[i][j];
+        }
+    }
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            result[6 * (i + 3) + j] = bottom_left[i][j];
+        }
+    }
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            result[6 * (i + 3) + (j + 3)] = rot_mat[i][j];
+        }
+    }
 }
 
 float MatrixUtils::norm(float* vec) {

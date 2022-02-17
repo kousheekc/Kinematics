@@ -4,11 +4,8 @@ Kinematics::Kinematics(int num_of_joints_) {
     num_of_joints = num_of_joints_;
     num_of_joints_declared = 0;
 
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            initial_end_effector_pose[i][j] = 0;
-        }
-    }
+    mat_utils.zero((float*)initial_end_effector_pose, 4, 4);
+    mat_utils.zero((float*)joint_screw_axes, 6, 6);
 }
 
 void Kinematics::add_joint_axis(float s1, float s2, float s3, float s4, float s5, float s6) {
@@ -74,8 +71,9 @@ void Kinematics::jacobian(float* joint_angles, float* jacobian) {
     float adj[6][6];
     float jacobian_column[6];
 
-    mat_utils.identity((float*)transform, 4);
+    mat_utils.zero((float*)jacobian, 6, 6);
 
+    mat_utils.identity((float*)transform, 4);
     
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
@@ -93,7 +91,7 @@ void Kinematics::jacobian(float* joint_angles, float* jacobian) {
         mat_utils.adjoint((float*)transform, (float*)adj);
         mat_utils.mul_vector((float*)adj, joint_screw_axes[i], 6, 6, jacobian_column);
         for (int j = 0; j < 6; j++) {
-            jacobian[j + i * 6] = jacobian_column[j];
+            jacobian[6 * j + i] = jacobian_column[j];
         }
     }
 }
