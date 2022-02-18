@@ -62,6 +62,42 @@ void Kinematics::forward(float* joint_angles, float* transform) {
     }
 }
 
+void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew, float ev, float max_iterations, float* joint_angles) {
+    float Tsb[4][4];
+    float Tsb_inv[4][4];
+    float Tsb_inv_T[4][4];
+    float log6[4][4];
+    float vec6[6];
+    float adj[6][6];
+    float Vs[6];
+    float w[3];
+    float v[3];
+
+    mat_utils.copy_matrix(initial_joint_angles, 1, 6, joint_angles);
+    forward(joint_angles, (float*)Tsb);
+    mat_utils.trn_mat_inv((float*)Tsb, (float*)Tsb_inv);
+    mat_utils.mul_matrix((float*)Tsb_inv, (float*)transform, 4, 4, 4, 4, (float*)Tsb_inv_T);
+    mat_utils.log6((float*)Tsb_inv_T, (float*)log6);
+    mat_utils.se3_to_vec((float*)log6, vec6);
+    mat_utils.adjoint((float*)Tsb, (float*)adj);
+    mat_utils.mul_vector((float*)adj, vec6, 6, 6, Vs);
+
+    w[0] = Vs[0];
+    w[1] = Vs[1];
+    w[2] = Vs[2];
+
+    v[0] = Vs[3];
+    v[1] = Vs[4];
+    v[2] = Vs[5];
+
+    bool error = (mat_utils.norm(w) > ew) || (mat_utils.norm(v) > ev);
+    int i = 0;
+
+    while (error || i < max_iterations) {
+        
+    }
+}
+
 void Kinematics::jacobian(float* joint_angles, float* jacobian) {
     float transform[4][4];
     float vec6[6];
