@@ -72,6 +72,11 @@ void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew
     float Vs[6];
     float w[3];
     float v[3];
+    float jac[6][6];
+    float pinv[6][6];
+    float pinv_Vs[6];
+    bool error;
+    int i;
 
     mat_utils.copy_matrix(initial_joint_angles, 1, 6, joint_angles);
     forward(joint_angles, (float*)Tsb);
@@ -90,11 +95,35 @@ void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew
     v[1] = Vs[4];
     v[2] = Vs[5];
 
-    bool error = (mat_utils.norm(w) > ew) || (mat_utils.norm(v) > ev);
-    int i = 0;
+    error = (mat_utils.norm(w) > ew) || (mat_utils.norm(v) > ev);
+    i = 0;
 
     while (error || i < max_iterations) {
-        
+        jacobian(joint_angles, (float*)jac);
+        mat_utils.pseudo_inverse((float*)jac, (float*)pinv);
+        mat_utils.mul_vector((float*)pinv, Vs, 6, 6, pinv_Vs);
+        mat_utils.add_matrix(joint_angles, pinv_Vs, 1, 6, joint_angles);
+
+        i = i + 1;
+
+        forward(joint_angles, (float*)Tsb);
+
+        mat_utils.trn_mat_inv((float*)Tsb, (float*)Tsb_inv);
+        mat_utils.mul_matrix((float*)Tsb_inv, (float*)transform, 4, 4, 4, 4, (float*)Tsb_inv_T);
+        mat_utils.log6((float*)Tsb_inv_T, (float*)log6);
+        mat_utils.se3_to_vec((float*)log6, vec6);
+        mat_utils.adjoint((float*)Tsb, (float*)adj);
+        mat_utils.mul_vector((float*)adj, vec6, 6, 6, Vs);
+
+        w[0] = Vs[0];
+        w[1] = Vs[1];
+        w[2] = Vs[2];
+
+        v[0] = Vs[3];
+        v[1] = Vs[4];
+        v[2] = Vs[5];
+
+        error = (mat_utils.norm(w) > ew) || (mat_utils.norm(v) > ev);
     }
 }
 
