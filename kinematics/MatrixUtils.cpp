@@ -54,6 +54,102 @@ void MatrixUtils::transpose(float* mat, int r, int c, float* result) {
     }
 }
 
+float MatrixUtils::trace(float* mat, int r) {
+    float sum = 0;
+    for (int i = 0; i < r; i++) {
+        sum += mat[r * i + i]; 
+    }
+    return sum;
+}
+
+void MatrixUtils::get_cofactor(float* mat, int p, int q, int r, float* result) {
+    int row = 0;
+    int col = 0;
+
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < r; j++) {
+            if (i != p && j != q) {
+                result[r * row + col] = mat[r * i + j];
+                col++;
+                if (col == r-1) {
+                    col = 0;
+                    row++;
+                }
+            }
+        }
+    }
+}
+
+float MatrixUtils::determinant(float* mat, int r) {
+    float d = 0;
+    float temp[6][6];
+
+    if (r == 1) {
+        return mat[r * 0 + 0];
+    }
+    int sign = 1;
+    for (int i = 0; i < n; i++) {
+        get_cofactor((float*)mat, 0, i, r, (float*)temp);
+        d += sign * mat[r * 0 + i] * determinant((float*)temp, n-1);
+        sign = -sign;
+    }
+    return d;
+}
+
+void MatrixUtils::adj(float* mat, int r, float* result) {
+    if (r == 1) {
+        result[r * 0 + 0] = 1;
+    }
+    
+    int sign = 1;
+    float temp[6][6];
+
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < r; j++) {
+            get_cofactor((float*)mat, i, j, r, (float*)temp);
+            sign = ((i + j) % 2 == 0) ? 1 : -1;
+            result[r * j + i] = (sign) * (determinant((float*)temp, n-1));
+        }
+    }
+}
+
+void MatrixUtils::inverse(float* mat, int r, float* result) {
+    float det = determinant(mat, n);
+    float adj_mat[6][6];
+
+    if (det == 0) {
+        Serial.println("Singular matrix");
+        return NULL;
+    }
+    adj((float*)mat, n, (float*)adj_mat);
+    div_scalar((float*)adj_mat, det, 6, 6, (float*)result);
+}
+
+void MatrixUtils::pseudo_inverse(float* mat, int r, int c, float* result) {
+    float A_t[6][6];
+
+    transpose((float*)mat, 6, 6);
+
+    if (r < c) {
+        // A+ = A_t * (A * A_t)^-1
+        float AA_t[6][6];
+        float AA_t_inv[6][6];
+
+        mul_matrix((float*)mat, (float*)A_t, 6, 6, 6, 6, (float*)AA_t);
+        inverse((float*)AA_t, 6, (float*)AA_t_inv);
+        mul_matrix((float*)A_t, (float*)AA_t_inv, 6, 6, 6, 6, (float*)result);
+    }
+    else {
+        // A+ = (A_t * A)^-1 * A_t
+        float A_tA[6][6];
+        float A_tA_inv[6][6];
+
+        mul_matrix((float*)A_t, (float*)mat, 6, 6, 6, 6, (float*)A_tA);
+        inverse((float*)A_tA, 6, (float*)A_tA_inv);
+        mul_matrix((float*)A_tA_inv, (float*)A_t, 6, 6, 6, 6, (float*)result);
+    }
+}
+
 // Transformation matrix methods
 void MatrixUtils::get_rot_mat(float* mat, float* rot_mat) {
     for (int i = 0; i < 3; i++) {

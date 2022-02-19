@@ -15,6 +15,12 @@ class MatrixUtils {
         void identity(float* mat, int n);
         void zero(float* mat, int r, int c);
         void transpose(float* mat, int r, int c, float* result);
+        float trace(float* mat, int r);
+        void get_cofactor(float* mat, int p, int q, int r, float* result);
+        float determinant(float* mat, float* temp, int r);
+        void adj(float* mat, int r, float* result);
+        void inverse(float* mat, int r, float* result);
+        void pseudo_inverse(float* mat, int r, int c, float* result);
 
         // Transformation matrix methods
         void get_rot_mat(float* mat, float* rot_mat);
@@ -24,6 +30,8 @@ class MatrixUtils {
         void adjoint(float* mat, float* result);
         void exp3(float* mat, float* result);
         void exp6(float* mat, float* result);
+        void log3(float* mat, float* result);
+        void log6(float* mat, float* result);
 
         // Vector Methods
         float norm(float* vec);
