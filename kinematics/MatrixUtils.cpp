@@ -338,6 +338,57 @@ void MatrixUtils::exp6(float* mat, float* result) {
     }
 }
 
+void MatrixUtils::log3(float* mat, float* result) {
+    float acos_input = (trace((float*)mat, 3) - 1.0) / 2.0;
+
+    if (acos_input >= 1) {
+        zero((float*)result, 3, 3);
+    }
+    else if (acos_input <= -1) {
+        float w[3];
+        float s;
+        float so3[3][3];
+        
+        if (1 + mat[3 * 2 + 2] > 1e-6) {
+            w[0] = mat[3 * 0 + 2];
+            w[1] = mat[3 * 1 + 2];
+            w[2] = 1 + mat[3 * 2 + 2];
+            s = 1.0 / sqrt(2.0 * (1 + mat[3 * 2 + 2]));
+            mul_scalar(w, s, 1, 3, w);
+        }
+        else if (1 + mat[3 * 1 + 1] >= 1e-6) {
+            w[0] = mat[3 * 0 + 1];
+            w[1] = 1 + mat[3 * 1 + 1];
+            w[2] = mat[3 * 2 + 1];
+            s = 1.0 / sqrt(2.0 * (1 + mat[3 * 1 + 1]));
+            mul_scalar(w, s, 1, 3, w);
+        }
+        else {
+            w[0] = 1 + mat[3 * 0 + 0];
+            w[1] = mat[3 * 1 + 0];
+            w[2] = mat[3 * 2 + 0];
+            s = 1.0 / sqrt(2.0 * (1 + mat[3 * 0 + 0]));
+            mul_scalar(w, s, 1, 3, w);
+        }
+        mul_scalar(w, PI, 1, 3, w);
+        vec_to_so3(w, (float*)so3);
+        copy_matrix((float*)so3, 3, 3, (float*)result);
+    }
+    else {
+        float mat_t[3][3];
+        float term[3][3];
+        float theta = acos(acos_input);
+        float s = theta / 2.0 / sin(theta);
+        transpose((float*)mat, 3, 3, (float*)mat_t);
+        sub_matrix((float*)mat, (float*)mat_t, 3, 3, (float*)term);
+        mul_scalar((float*)term, s, 3, 3, (float*)result);
+    }
+}
+
+void MatrixUtils::log6(float* mat, float* result) {
+    
+}
+
 // Vector methods
 float MatrixUtils::norm(float* vec) {
     return sqrt(sq(vec[0]) + sq(vec[1]) + sq(vec[2]));

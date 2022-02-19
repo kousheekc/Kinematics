@@ -5,29 +5,32 @@ void setup() {
   // put your setup code here, to run once:
     Serial.begin(9600);
 
-    // Kinematics kin(4);
+    Kinematics kin(3);
     MatrixUtils mat_utils;
 
-    float a[5][4] = {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1},{1,2,0,0}};
-    float result[4][5];
-    mat_utils.pseudo_inverse((float*)a, 5, 4, (float*)result);
-    mat_utils.print_matrix((float*)result, 4, 5, "pinv");
-    // kin.add_joint_axis(0, 0, 1,   0, 0.2, 0.2);
-    // kin.add_joint_axis(1, 0, 0,   2,   0,   3);
-    // kin.add_joint_axis(0, 1, 0,   0,   2,   1);
-    // kin.add_joint_axis(1, 0, 0, 0.2, 0.3, 0.4);
+    kin.add_joint_axis(0, 0,  1,  4, 0,    0);
+    kin.add_joint_axis(0, 0,  0,  0, 1,    0);
+    kin.add_joint_axis(0, 0, -1, -6, 0, -0.1);
 
-    // float thetalist[4] = {0.2, 1.1, 0.1, 1.2};
+    kin.add_initial_end_effector_pose(-1, 0,  0, 0,
+                                    0, 1, 0, 6,
+                                    0, 0, -1, 2,
+                                    0, 0, 0, 1);
 
-    // float jac[6][6];
+    float T[4][4] = {
+        {0, 1,  0,     -5},
+        {1, 0,  0,      4},
+        {0, 0, -1, 1.6858},
+        {0, 0,  0,      1}
+    };
 
-    // kin.jacobian(thetalist, (float*)jac);
-    // mat_utils.print_matrix((float*)jac, 6, 6, "Jacobian");
+    float thetalist0[3] = {1.5, 2.5, 3};
+    float thetalist[3];
 
-//    kin.add_initial_end_effector_pose(-1, 0, 0, 0,
-//                                  0, 1, 0, 6,
-//                                  0, 0, -1, 2,
-//                                  0, 0, 0, 1);
+    kin.inverse((float*)T, thetalist0, 0.01, 0.001, 20, thetalist);
+    mat_utils.print_matrix(thetalist, 1, 3, "Joint angles");
+
+
 
     // kin.add_joint_axis(0, 0, 1, 0, 0, 0);
     // kin.add_joint_axis(0, 1, 0, -290, 0, 0);
