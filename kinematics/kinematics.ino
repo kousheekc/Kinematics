@@ -5,20 +5,24 @@ void setup() {
   // put your setup code here, to run once:
     Serial.begin(9600);
 
-    Kinematics kin(4);
+    // Kinematics kin(4);
     MatrixUtils mat_utils;
 
-    kin.add_joint_axis(0, 0, 1,   0, 0.2, 0.2);
-    kin.add_joint_axis(1, 0, 0,   2,   0,   3);
-    kin.add_joint_axis(0, 1, 0,   0,   2,   1);
-    kin.add_joint_axis(1, 0, 0, 0.2, 0.3, 0.4);
+    float a[5][4] = {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1},{1,2,0,0}};
+    float result[4][5];
+    mat_utils.pseudo_inverse((float*)a, 5, 4, (float*)result);
+    mat_utils.print_matrix((float*)result, 4, 5, "pinv");
+    // kin.add_joint_axis(0, 0, 1,   0, 0.2, 0.2);
+    // kin.add_joint_axis(1, 0, 0,   2,   0,   3);
+    // kin.add_joint_axis(0, 1, 0,   0,   2,   1);
+    // kin.add_joint_axis(1, 0, 0, 0.2, 0.3, 0.4);
 
-    float thetalist[4] = {0.2, 1.1, 0.1, 1.2};
+    // float thetalist[4] = {0.2, 1.1, 0.1, 1.2};
 
-    float jac[6][6];
+    // float jac[6][6];
 
-    kin.jacobian(thetalist, (float*)jac);
-    mat_utils.print_matrix((float*)jac, 6, 6, "Jacobian");
+    // kin.jacobian(thetalist, (float*)jac);
+    // mat_utils.print_matrix((float*)jac, 6, 6, "Jacobian");
 
 //    kin.add_initial_end_effector_pose(-1, 0, 0, 0,
 //                                  0, 1, 0, 6,

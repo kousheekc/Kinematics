@@ -4,6 +4,43 @@ MatrixUtils::MatrixUtils() {
   
 }
 
+// Create matrix and vector
+float** MatrixUtils::create_matrix(int r, int c) {
+    float** result = new float*[r];
+
+    for (int i = 0; i < r; i++) {
+        result[i] = new float[c];
+        for (int j = 0; j < c; j++) {
+            if (i == j) {
+                result[i][j] = 1;
+            }
+            else {
+                result[i][j] = 0;
+            }
+        }
+    }
+    return result;
+}
+
+int* MatrixUtils::create_vector(int n) {
+    int* result = new int[n];
+    for (int i = 0; i < n; i++) {
+        result[i] = 0;
+    }
+    return result;
+}
+
+void MatrixUtils::delete_matrix(float** mat, int r, int c) {
+    for(int i = 0; i < r; i++) {
+        delete[] mat[i];   
+    }
+    delete[] mat;
+}
+
+void MatrixUtils::delete_vector(int* vec, int n) {
+    delete [] vec;
+}
+
 // General matrix methods
 void MatrixUtils::print_matrix(float* mat, int r, int c, String message) { 
     Serial.println(message);
@@ -62,91 +99,113 @@ float MatrixUtils::trace(float* mat, int r) {
     return sum;
 }
 
-void MatrixUtils::get_cofactor(float* mat, int p, int q, int r, float* result) {
-    int row = 0;
-    int col = 0;
+int MatrixUtils::inverse(float* A, int n) {
+  int pivrow = 0;
+  int k, i, j; 
+  int* pivrows = create_vector(n);
+  float tmp;
 
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < r; j++) {
-            if (i != p && j != q) {
-                result[r * row + col] = mat[r * i + j];
-                col++;
-                if (col == r-1) {
-                    col = 0;
-                    row++;
-                }
-            }
+  for (k = 0; k < n; k++)
+  {
+    // find pivot row, the row with biggest entry in current column
+    tmp = 0;
+    for (i = k; i < n; i++)
+    {
+      if (abs(A[i * n + k]) >= tmp) // 'Avoid using other functions inside abs()?'
+      {
+        tmp = abs(A[i * n + k]);
+        pivrow = i;
+      }
+    }
+
+    // check for singular matrix
+    if (A[pivrow * n + k] == 0.0f)
+    {
+      Serial.println("Inversion failed due to singular matrix");
+      delete_vector(pivrows, n);
+      return 0;
+    }
+
+    // Execute pivot (row swap) if needed
+    if (pivrow != k)
+    {
+      // swap row k with pivrow
+      for (j = 0; j < n; j++)
+      {
+        tmp = A[k * n + j];
+        A[k * n + j] = A[pivrow * n + j];
+        A[pivrow * n + j] = tmp;
+      }
+    }
+    pivrows[k] = pivrow;  // record row swap (even if no swap happened)
+
+    tmp = 1.0f / A[k * n + k];  // invert pivot element
+    A[k * n + k] = 1.0f;    // This element of input matrix becomes result matrix
+
+    // Perform row reduction (divide every element by pivot)
+    for (j = 0; j < n; j++)
+    {
+      A[k * n + j] = A[k * n + j] * tmp;
+    }
+
+    // Now eliminate all other entries in this column
+    for (i = 0; i < n; i++)
+    {
+      if (i != k)
+      {
+        tmp = A[i * n + k];
+        A[i * n + k] = 0.0f; // The other place where in matrix becomes result mat
+        for (j = 0; j < n; j++)
+        {
+          A[i * n + j] = A[i * n + j] - A[k * n + j] * tmp;
         }
+      }
     }
-}
+  }
 
-float MatrixUtils::determinant(float* mat, int r) {
-    float d = 0;
-    float temp[6][6];
-
-    if (r == 1) {
-        return mat[r * 0 + 0];
+  // Done, now need to undo pivot row swaps by doing column swaps in reverse order
+  for (k = n - 1; k >= 0; k--)
+  {
+    if (pivrows[k] != k)
+    {
+      for (i = 0; i < n; i++)
+      {
+        tmp = A[i * n + k];
+        A[i * n + k] = A[i * n + pivrows[k]];
+        A[i * n + pivrows[k]] = tmp;
+      }
     }
-    int sign = 1;
-    for (int i = 0; i < r; i++) {
-        get_cofactor((float*)mat, 0, i, r, (float*)temp);
-        d += sign * mat[r * 0 + i] * determinant((float*)temp, r-1);
-        sign = -sign;
-    }
-    return d;
-}
-
-void MatrixUtils::adj(float* mat, int r, float* result) {
-    if (r == 1) {
-        result[r * 0 + 0] = 1;
-    }
-    
-    int sign = 1;
-    float temp[6][6];
-
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < r; j++) {
-            get_cofactor((float*)mat, i, j, r, (float*)temp);
-            sign = ((i + j) % 2 == 0) ? 1 : -1;
-            result[r * j + i] = (sign) * (determinant((float*)temp, r-1));
-        }
-    }
-}
-
-void MatrixUtils::inverse(float* mat, int r, float* result) {
-    float det = determinant(mat, r);
-    float adj_mat[6][6];
-
-    if (det == 0) {
-        Serial.println("Singular matrix");
-    }
-    adj((float*)mat, r, (float*)adj_mat);
-    div_scalar((float*)adj_mat, det, r, r, (float*)result);
+  }
+  delete_vector(pivrows, n);
+  return 1;
 }
 
 void MatrixUtils::pseudo_inverse(float* mat, int r, int c, float* result) {
-    float A_t[4][6];
-    transpose((float*)mat, 6, 4, (float*)A_t);
-    print_matrix((float*)mat, 4, 6, "transpose");
-    
+    float** A_t = create_matrix(c, r);
+    transpose((float*)mat, r, c, (float*)A_t);
+
     if (r < c) {
         // A+ = A_t * (A * A_t)^-1
-        float AA_t[6][6];
-        float AA_t_inv[6][6];
+        float** AA_t = create_matrix(r, r);
+     
+        mul_matrix((float*)mat, (float*)A_t, r, c, c, r, (float*)AA_t);
+        inverse((float*)AA_t, r);
+        mul_matrix((float*)A_t, (float*)AA_t, c, r, r, r, (float*)result);
 
-        mul_matrix((float*)mat, (float*)A_t, 6, 6, 6, 6, (float*)AA_t);
-        inverse((float*)AA_t, 6, (float*)AA_t_inv);
-        mul_matrix((float*)A_t, (float*)AA_t_inv, 6, 6, 6, 6, (float*)result);
+        delete_matrix(AA_t, r, r);
     }
     else {
         // A+ = (A_t * A)^-1 * A_t
-        float A_tA[6][6];
-        float A_tA_inv[6][6];
+        float** A_tA = create_matrix(c, c);
 
-        mul_matrix((float*)A_t, (float*)mat, 6, 6, 6, 6, (float*)A_tA);
-        inverse((float*)A_tA, 6, (float*)A_tA_inv);
-        mul_matrix((float*)A_tA_inv, (float*)A_t, 6, 6, 6, 6, (float*)result);
+        mul_matrix((float*)A_t, (float*)mat, c, r, r, c, (float*)A_tA);
+        inverse((float*)A_tA, c);
+        mul_matrix((float*)A_tA, (float*)A_t, c, c, c, r, (float*)result);
+
+        delete_matrix(A_tA, c, c);
     }
+
+    delete_matrix(A_t, c, r);
 }
 
 // Transformation matrix methods
@@ -360,7 +419,7 @@ void MatrixUtils::sub_matrix(float* mat1, float* mat2, int r, int c, float* resu
 void MatrixUtils::mul_matrix(float* mat1, float* mat2, int r1, int c1, int r2, int c2, float* result) {
     for (int i = 0; i < r1; i++) {
         for(int j = 0; j < c2; j++) {
-            result[r2 * i + j] = 0;
+            result[c2 * i + j] = 0;
             for (int k = 0; k < c1; k++) {
                 result[c2 * i + j] = result[c2 * i + j] + mat1[c1 * i + k] * mat2[c2 * k + j];
             }

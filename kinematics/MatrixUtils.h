@@ -8,6 +8,12 @@ class MatrixUtils {
 
     public:
         MatrixUtils();
+
+        // Create matrix and vector
+        float** create_matrix(int r, int c);
+        int* create_vector(int n);
+        void delete_matrix(float** mat, int r, int c);
+        void delete_vector(int* vec, int n);
         
         // General matrix methods
         void print_matrix(float* mat, int r, int c, String message="");
@@ -19,7 +25,7 @@ class MatrixUtils {
         void get_cofactor(float* mat, int p, int q, int r, float* result);
         float determinant(float* mat, int r);
         void adj(float* mat, int r, float* result);
-        void inverse(float* mat, int r, float* result);
+        int inverse(float* A, int n);
         void pseudo_inverse(float* mat, int r, int c, float* result);
 
         // Transformation matrix methods
