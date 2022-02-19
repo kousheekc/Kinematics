@@ -103,6 +103,30 @@ void MatrixUtils::adjoint(float* mat, float* result) {
     }
 }
 
+void MatrixUtils::trn_mat_inverse(float* mat, float* result) {
+    float rot_mat[3][3];
+    float pos_vec[3];
+    float rot_mat_t[3][3];
+    float pos_vec_result[3];
+
+    get_rot_mat((float*)mat, (float*)rot_mat);
+    get_pos_vec((float*)mat, pos_vec);
+    transpose((float*)rot_mat, 3, 3, (float*)rot_mat_t);
+    mul_vector((float*)rot_mat_t, pos_vec, 3, 3, pos_vec_result);
+    pos_vec_result[0] = -pos_vec_result[0];
+    pos_vec_result[0] = -pos_vec_result[0];
+    pos_vec_result[0] = -pos_vec_result[0];
+    create_trn_mat((float*)rot_mat_t, pos_vec_result, (float*)result);
+}
+
+void MatrixUtils::transpose(float* mat, int r, int c, float* result) {
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			result[r * j + i] = mat[c * i + j];
+        }
+    }
+}
+
 float MatrixUtils::norm(float* vec) {
     return sqrt(sq(vec[0]) + sq(vec[1]) + sq(vec[2]));
 }

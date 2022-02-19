@@ -18,6 +18,8 @@ class MatrixUtils {
         void get_pos_vec(float* mat, float* pos_vec);
         void create_trn_mat(float* rot_mat, float* pos_vec, float* trn_mat);
         void adjoint(float* mat, float* result);
+        void trn_mat_inverse(float* mat, float* result);
+        void transpose(float* mat, int r, int c, float* result);
 
         float norm(float* vec);
         float get_angle(float* vec);

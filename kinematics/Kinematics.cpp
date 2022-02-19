@@ -80,7 +80,7 @@ void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew
 
     mat_utils.copy_matrix(initial_joint_angles, 1, 6, joint_angles);
     forward(joint_angles, (float*)Tsb);
-    mat_utils.trn_mat_inv((float*)Tsb, (float*)Tsb_inv);
+    mat_utils.trn_mat_inverse((float*)Tsb, (float*)Tsb_inv);
     mat_utils.mul_matrix((float*)Tsb_inv, (float*)transform, 4, 4, 4, 4, (float*)Tsb_inv_T);
     mat_utils.log6((float*)Tsb_inv_T, (float*)log6);
     mat_utils.se3_to_vec((float*)log6, vec6);
@@ -108,7 +108,7 @@ void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew
 
         forward(joint_angles, (float*)Tsb);
 
-        mat_utils.trn_mat_inv((float*)Tsb, (float*)Tsb_inv);
+        mat_utils.trn_mat_inverse((float*)Tsb, (float*)Tsb_inv);
         mat_utils.mul_matrix((float*)Tsb_inv, (float*)transform, 4, 4, 4, 4, (float*)Tsb_inv_T);
         mat_utils.log6((float*)Tsb_inv_T, (float*)log6);
         mat_utils.se3_to_vec((float*)log6, vec6);
