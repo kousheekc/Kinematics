@@ -9,7 +9,7 @@ void MatrixUtils::print_matrix(float* mat, int r, int c, String message) {
     Serial.println(message);
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            Serial.print(mat[r * i + j]);
+            Serial.print(mat[c * i + j]);
             Serial.print("\t");
         }
         Serial.println();
@@ -20,7 +20,7 @@ void MatrixUtils::print_matrix(float* mat, int r, int c, String message) {
 void MatrixUtils::copy_matrix(float* mat, int r, int c, float* result) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j];
+            result[c * i + j] = mat[c * i + j];
         }
     }
 }
@@ -41,15 +41,15 @@ void MatrixUtils::identity(float* mat, int n) {
 void MatrixUtils::zero(float* mat, int r, int c) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            mat[r * i + j] = 0;
+            mat[c * i + j] = 0;
         }
     }
 }
 
 void MatrixUtils::transpose(float* mat, int r, int c, float* result) {
-	for (int i = 0; i < r; i++) {
-		for (int j = 0; j < c; j++) {
-			result[r * j + i] = mat[c * i + j];
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            result[r * j + i] = mat[c * i + j];
         }
     }
 }
@@ -88,9 +88,9 @@ float MatrixUtils::determinant(float* mat, int r) {
         return mat[r * 0 + 0];
     }
     int sign = 1;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < r; i++) {
         get_cofactor((float*)mat, 0, i, r, (float*)temp);
-        d += sign * mat[r * 0 + i] * determinant((float*)temp, n-1);
+        d += sign * mat[r * 0 + i] * determinant((float*)temp, r-1);
         sign = -sign;
     }
     return d;
@@ -108,28 +108,27 @@ void MatrixUtils::adj(float* mat, int r, float* result) {
         for (int j = 0; j < r; j++) {
             get_cofactor((float*)mat, i, j, r, (float*)temp);
             sign = ((i + j) % 2 == 0) ? 1 : -1;
-            result[r * j + i] = (sign) * (determinant((float*)temp, n-1));
+            result[r * j + i] = (sign) * (determinant((float*)temp, r-1));
         }
     }
 }
 
 void MatrixUtils::inverse(float* mat, int r, float* result) {
-    float det = determinant(mat, n);
+    float det = determinant(mat, r);
     float adj_mat[6][6];
 
     if (det == 0) {
         Serial.println("Singular matrix");
-        return NULL;
     }
-    adj((float*)mat, n, (float*)adj_mat);
-    div_scalar((float*)adj_mat, det, 6, 6, (float*)result);
+    adj((float*)mat, r, (float*)adj_mat);
+    div_scalar((float*)adj_mat, det, r, r, (float*)result);
 }
 
 void MatrixUtils::pseudo_inverse(float* mat, int r, int c, float* result) {
-    float A_t[6][6];
-
-    transpose((float*)mat, 6, 6);
-
+    float A_t[4][6];
+    transpose((float*)mat, 6, 4, (float*)A_t);
+    print_matrix((float*)mat, 4, 6, "transpose");
+    
     if (r < c) {
         // A+ = A_t * (A * A_t)^-1
         float AA_t[6][6];
@@ -313,7 +312,7 @@ float MatrixUtils::get_angle(float* vec) {
 void MatrixUtils::add_scalar(float* mat, float s, int r, int c, float* result) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] + s;
+            result[c * i + j] = mat[c * i + j] + s;
         }
     }
 }
@@ -321,7 +320,7 @@ void MatrixUtils::add_scalar(float* mat, float s, int r, int c, float* result) {
 void MatrixUtils::sub_scalar(float* mat, float s, int r, int c, float* result) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] - s;
+            result[c * i + j] = mat[c * i + j] - s;
         }
     }
 }
@@ -329,7 +328,7 @@ void MatrixUtils::sub_scalar(float* mat, float s, int r, int c, float* result) {
 void MatrixUtils::mul_scalar(float* mat, float s, int r, int c, float* result) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] * s;
+            result[c * i + j] = mat[c * i + j] * s;
         }
     }
 }
@@ -337,7 +336,7 @@ void MatrixUtils::mul_scalar(float* mat, float s, int r, int c, float* result) {
 void MatrixUtils::div_scalar(float* mat, float s, int r, int c, float* result) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] / s;
+            result[c * i + j] = mat[c * i + j] / s;
         }
     }
 }
@@ -345,7 +344,7 @@ void MatrixUtils::div_scalar(float* mat, float s, int r, int c, float* result) {
 void MatrixUtils::add_matrix(float* mat1, float* mat2, int r, int c, float* result) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat1[r * i + j] + mat2[r * i + j];
+            result[c * i + j] = mat1[c * i + j] + mat2[c * i + j];
         }
     }
 }
@@ -353,17 +352,17 @@ void MatrixUtils::add_matrix(float* mat1, float* mat2, int r, int c, float* resu
 void MatrixUtils::sub_matrix(float* mat1, float* mat2, int r, int c, float* result) {
     for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat1[r * i + j] - mat2[r * i + j];
+            result[c * i + j] = mat1[c * i + j] - mat2[c * i + j];
         }
     }
 }
 
 void MatrixUtils::mul_matrix(float* mat1, float* mat2, int r1, int c1, int r2, int c2, float* result) {
-	for (int i = 0; i < r1; i++) {
-		for(int j = 0; j < c2; j++) {
-			result[r2 * i + j] = 0;
-			for (int k = 0; k < c1; k++) {
-				result[c2 * i + j] = result[c2 * i + j] + mat1[c1 * i + k] * mat2[c2 * k + j];
+    for (int i = 0; i < r1; i++) {
+        for(int j = 0; j < c2; j++) {
+            result[r2 * i + j] = 0;
+            for (int k = 0; k < c1; k++) {
+                result[c2 * i + j] = result[c2 * i + j] + mat1[c1 * i + k] * mat2[c2 * k + j];
             }
         }
     }
@@ -376,7 +375,7 @@ void MatrixUtils::mul_vector(float* mat, float* vec, int r, int c, float* result
     
     for(int i = 0; i < r; i++) {
         for(int j = 0; j < c; j++) {
-            result[i] = result[i] + (vec[j] * mat[r * i + j]);
+            result[i] = result[i] + (vec[j] * mat[c * i + j]);
         }
     }
 }
@@ -432,5 +431,3 @@ void MatrixUtils::vec_to_se3(float* vec, float* result) {
     result[4 * 3 + 2] = 0;
     result[4 * 3 + 3] = 0;
 }
-
-

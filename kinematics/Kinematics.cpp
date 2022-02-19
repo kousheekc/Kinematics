@@ -100,7 +100,7 @@ void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew
 
     while (error || i < max_iterations) {
         jacobian(joint_angles, (float*)jac);
-        mat_utils.pseudo_inverse((float*)jac, (float*)pinv);
+        mat_utils.pseudo_inverse((float*)jac, 6, 6, (float*)pinv);
         mat_utils.mul_vector((float*)pinv, Vs, 6, 6, pinv_Vs);
         mat_utils.add_matrix(joint_angles, pinv_Vs, 1, 6, joint_angles);
 

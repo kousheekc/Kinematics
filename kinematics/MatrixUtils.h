@@ -17,7 +17,7 @@ class MatrixUtils {
         void transpose(float* mat, int r, int c, float* result);
         float trace(float* mat, int r);
         void get_cofactor(float* mat, int p, int q, int r, float* result);
-        float determinant(float* mat, float* temp, int r);
+        float determinant(float* mat, int r);
         void adj(float* mat, int r, float* result);
         void inverse(float* mat, int r, float* result);
         void pseudo_inverse(float* mat, int r, int c, float* result);
