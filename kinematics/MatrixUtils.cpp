@@ -4,6 +4,7 @@ MatrixUtils::MatrixUtils() {
   
 }
 
+// General matrix methods
 void MatrixUtils::print_matrix(float* mat, int r, int c, String message) { 
     Serial.println(message);
     for (int i = 0; i < r; i++) {
@@ -45,6 +46,15 @@ void MatrixUtils::zero(float* mat, int r, int c) {
     }
 }
 
+void MatrixUtils::transpose(float* mat, int r, int c, float* result) {
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			result[r * j + i] = mat[c * i + j];
+        }
+    }
+}
+
+// Transformation matrix methods
 void MatrixUtils::get_rot_mat(float* mat, float* rot_mat) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -69,6 +79,22 @@ void MatrixUtils::create_trn_mat(float* rot_mat, float* pos_vec, float* trn_mat)
         trn_mat[4 * i + 3] = pos_vec[i];
     }
     trn_mat[4 * 3 + 3] = 1;
+}
+
+void MatrixUtils::trn_mat_inverse(float* mat, float* result) {
+    float rot_mat[3][3];
+    float pos_vec[3];
+    float rot_mat_t[3][3];
+    float pos_vec_result[3];
+
+    get_rot_mat((float*)mat, (float*)rot_mat);
+    get_pos_vec((float*)mat, pos_vec);
+    transpose((float*)rot_mat, 3, 3, (float*)rot_mat_t);
+    mul_vector((float*)rot_mat_t, pos_vec, 3, 3, pos_vec_result);
+    pos_vec_result[0] = -pos_vec_result[0];
+    pos_vec_result[0] = -pos_vec_result[0];
+    pos_vec_result[0] = -pos_vec_result[0];
+    create_trn_mat((float*)rot_mat_t, pos_vec_result, (float*)result);
 }
 
 void MatrixUtils::adjoint(float* mat, float* result) {
@@ -101,160 +127,6 @@ void MatrixUtils::adjoint(float* mat, float* result) {
             result[6 * (i + 3) + (j + 3)] = rot_mat[i][j];
         }
     }
-}
-
-void MatrixUtils::trn_mat_inverse(float* mat, float* result) {
-    float rot_mat[3][3];
-    float pos_vec[3];
-    float rot_mat_t[3][3];
-    float pos_vec_result[3];
-
-    get_rot_mat((float*)mat, (float*)rot_mat);
-    get_pos_vec((float*)mat, pos_vec);
-    transpose((float*)rot_mat, 3, 3, (float*)rot_mat_t);
-    mul_vector((float*)rot_mat_t, pos_vec, 3, 3, pos_vec_result);
-    pos_vec_result[0] = -pos_vec_result[0];
-    pos_vec_result[0] = -pos_vec_result[0];
-    pos_vec_result[0] = -pos_vec_result[0];
-    create_trn_mat((float*)rot_mat_t, pos_vec_result, (float*)result);
-}
-
-void MatrixUtils::transpose(float* mat, int r, int c, float* result) {
-	for (int i = 0; i < r; i++) {
-		for (int j = 0; j < c; j++) {
-			result[r * j + i] = mat[c * i + j];
-        }
-    }
-}
-
-float MatrixUtils::norm(float* vec) {
-    return sqrt(sq(vec[0]) + sq(vec[1]) + sq(vec[2]));
-}
-
-float MatrixUtils::get_angle(float* vec) {
-    return norm(vec);
-}
-
-void MatrixUtils::add_scalar(float* mat, float s, int r, int c, float* result) {
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] + s;
-        }
-    }
-}
-
-void MatrixUtils::sub_scalar(float* mat, float s, int r, int c, float* result) {
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] - s;
-        }
-    }
-}
-
-void MatrixUtils::mul_scalar(float* mat, float s, int r, int c, float* result) {
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] * s;
-        }
-    }
-}
-
-void MatrixUtils::div_scalar(float* mat, float s, int r, int c, float* result) {
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat[r * i + j] / s;
-        }
-    }
-}
-
-void MatrixUtils::add_matrix(float* mat1, float* mat2, int r, int c, float* result) {
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat1[r * i + j] + mat2[r * i + j];
-        }
-    }
-}
-
-void MatrixUtils::sub_matrix(float* mat1, float* mat2, int r, int c, float* result) {
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-            result[r * i + j] = mat1[r * i + j] - mat2[r * i + j];
-        }
-    }
-}
-
-void MatrixUtils::mul_matrix(float* mat1, float* mat2, int r1, int c1, int r2, int c2, float* result) {
-	for (int i = 0; i < r1; i++) {
-		for(int j = 0; j < c2; j++) {
-			result[r2 * i + j] = 0;
-			for (int k = 0; k < c1; k++) {
-				result[c2 * i + j] = result[c2 * i + j] + mat1[c1 * i + k] * mat2[c2 * k + j];
-            }
-        }
-    }
-}
-
-void MatrixUtils::mul_vector(float* mat, float* vec, int r, int c, float* result) {
-    for (int i = 0; i < c; i++) {
-        result[i] = 0;
-    }
-    
-    for(int i = 0; i < r; i++) {
-        for(int j = 0; j < c; j++) {
-            result[i] = result[i] + (vec[j] * mat[r * i + j]);
-        }
-    }
-}
-
-void MatrixUtils::vec_to_so3(float* vec, float* result) {
-    result[3 * 0 + 0] = 0;
-    result[3 * 0 + 1] = -vec[2];
-    result[3 * 0 + 2] = vec[1];
-
-    result[3 * 1 + 0] = vec[2];
-    result[3 * 1 + 1] = 0;
-    result[3 * 1 + 2] = -vec[0];
-
-    result[3 * 2 + 0] = -vec[1];
-    result[3 * 2 + 1] = vec[0];
-    result[3 * 2 + 2] = 0;
-}
-
-void MatrixUtils::so3_to_vec(float* rot_mat, float* result) {
-    result[0] = rot_mat[3 * 2 + 1];
-    result[1] = rot_mat[3 * 0 + 2];
-    result[2] = rot_mat[3 * 1 + 0];
-}
-
-void MatrixUtils::se3_to_vec(float* trn_mat, float* result) {
-    result[0] = trn_mat[4 * 2 + 1];
-    result[1] = trn_mat[4 * 0 + 2];
-    result[2] = trn_mat[4 * 1 + 0];
-    result[3] = trn_mat[4 * 0 + 3];
-    result[4] = trn_mat[4 * 1 + 3];
-    result[5] = trn_mat[4 * 2 + 3];
-}
-
-void MatrixUtils::vec_to_se3(float* vec, float* result) {
-    float v[3] = {vec[0], vec[1], vec[2]};
-    float so3_mat[3][3];
-
-    vec_to_so3(v, (float*)so3_mat);
-
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            result[4 * i + j] = so3_mat[i][j];
-        }
-    }
-
-    result[4 * 0 + 3] = vec[3];
-    result[4 * 1 + 3] = vec[4];
-    result[4 * 2 + 3] = vec[5];
-
-    result[4 * 3 + 0] = 0;
-    result[4 * 3 + 1] = 0;
-    result[4 * 3 + 2] = 0;
-    result[4 * 3 + 3] = 0;
 }
 
 void MatrixUtils::exp3(float* mat, float* result) {
@@ -331,3 +203,138 @@ void MatrixUtils::exp6(float* mat, float* result) {
         create_trn_mat((float*)result_rot, result_pos, (float*)result);
     }
 }
+
+// Vector methods
+float MatrixUtils::norm(float* vec) {
+    return sqrt(sq(vec[0]) + sq(vec[1]) + sq(vec[2]));
+}
+
+float MatrixUtils::get_angle(float* vec) {
+    return norm(vec);
+}
+
+// Matrix operators
+void MatrixUtils::add_scalar(float* mat, float s, int r, int c, float* result) {
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            result[r * i + j] = mat[r * i + j] + s;
+        }
+    }
+}
+
+void MatrixUtils::sub_scalar(float* mat, float s, int r, int c, float* result) {
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            result[r * i + j] = mat[r * i + j] - s;
+        }
+    }
+}
+
+void MatrixUtils::mul_scalar(float* mat, float s, int r, int c, float* result) {
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            result[r * i + j] = mat[r * i + j] * s;
+        }
+    }
+}
+
+void MatrixUtils::div_scalar(float* mat, float s, int r, int c, float* result) {
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            result[r * i + j] = mat[r * i + j] / s;
+        }
+    }
+}
+
+void MatrixUtils::add_matrix(float* mat1, float* mat2, int r, int c, float* result) {
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            result[r * i + j] = mat1[r * i + j] + mat2[r * i + j];
+        }
+    }
+}
+
+void MatrixUtils::sub_matrix(float* mat1, float* mat2, int r, int c, float* result) {
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            result[r * i + j] = mat1[r * i + j] - mat2[r * i + j];
+        }
+    }
+}
+
+void MatrixUtils::mul_matrix(float* mat1, float* mat2, int r1, int c1, int r2, int c2, float* result) {
+	for (int i = 0; i < r1; i++) {
+		for(int j = 0; j < c2; j++) {
+			result[r2 * i + j] = 0;
+			for (int k = 0; k < c1; k++) {
+				result[c2 * i + j] = result[c2 * i + j] + mat1[c1 * i + k] * mat2[c2 * k + j];
+            }
+        }
+    }
+}
+
+void MatrixUtils::mul_vector(float* mat, float* vec, int r, int c, float* result) {
+    for (int i = 0; i < c; i++) {
+        result[i] = 0;
+    }
+    
+    for(int i = 0; i < r; i++) {
+        for(int j = 0; j < c; j++) {
+            result[i] = result[i] + (vec[j] * mat[r * i + j]);
+        }
+    }
+}
+
+// Matrix vector methods
+void MatrixUtils::vec_to_so3(float* vec, float* result) {
+    result[3 * 0 + 0] = 0;
+    result[3 * 0 + 1] = -vec[2];
+    result[3 * 0 + 2] = vec[1];
+
+    result[3 * 1 + 0] = vec[2];
+    result[3 * 1 + 1] = 0;
+    result[3 * 1 + 2] = -vec[0];
+
+    result[3 * 2 + 0] = -vec[1];
+    result[3 * 2 + 1] = vec[0];
+    result[3 * 2 + 2] = 0;
+}
+
+void MatrixUtils::so3_to_vec(float* rot_mat, float* result) {
+    result[0] = rot_mat[3 * 2 + 1];
+    result[1] = rot_mat[3 * 0 + 2];
+    result[2] = rot_mat[3 * 1 + 0];
+}
+
+void MatrixUtils::se3_to_vec(float* trn_mat, float* result) {
+    result[0] = trn_mat[4 * 2 + 1];
+    result[1] = trn_mat[4 * 0 + 2];
+    result[2] = trn_mat[4 * 1 + 0];
+    result[3] = trn_mat[4 * 0 + 3];
+    result[4] = trn_mat[4 * 1 + 3];
+    result[5] = trn_mat[4 * 2 + 3];
+}
+
+void MatrixUtils::vec_to_se3(float* vec, float* result) {
+    float v[3] = {vec[0], vec[1], vec[2]};
+    float so3_mat[3][3];
+
+    vec_to_so3(v, (float*)so3_mat);
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            result[4 * i + j] = so3_mat[i][j];
+        }
+    }
+
+    result[4 * 0 + 3] = vec[3];
+    result[4 * 1 + 3] = vec[4];
+    result[4 * 2 + 3] = vec[5];
+
+    result[4 * 3 + 0] = 0;
+    result[4 * 3 + 1] = 0;
+    result[4 * 3 + 2] = 0;
+    result[4 * 3 + 3] = 0;
+}
+
+
