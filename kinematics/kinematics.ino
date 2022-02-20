@@ -30,8 +30,6 @@ void setup() {
     kin.inverse((float*)T, thetalist0, 0.01, 0.001, 20, thetalist);
     mat_utils.print_matrix(thetalist, 1, 3, "Joint angles");
 
-
-
     // kin.add_joint_axis(0, 0, 1, 0, 0, 0);
     // kin.add_joint_axis(0, 1, 0, -290, 0, 0);
     // kin.add_joint_axis(0, 1, 0, -560, 0, 0);

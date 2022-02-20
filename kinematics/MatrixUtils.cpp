@@ -386,7 +386,64 @@ void MatrixUtils::log3(float* mat, float* result) {
 }
 
 void MatrixUtils::log6(float* mat, float* result) {
-    
+    float rot_mat[3][3];
+    float w_mat[3][3];
+    bool condition = true;
+
+    get_rot_mat((float*)mat, (float*)rot_mat);
+    log3((float*)rot_mat, (float*)w_mat);
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (w_mat[i][j] != 0) {
+                condition = false;
+            }
+        }
+    }
+    if (condition == true) {
+        float rot[3][3];
+        float vec[3];
+
+        zero((float*)rot, 3, 3);
+        vec[0] = mat[4 * 0 + 3];
+        vec[1] = mat[4 * 1 + 3];
+        vec[2] = mat[4 * 2 + 3];
+
+        create_trn_mat((float*)rot, vec, (float*)result);
+        result[4 * 3 + 3] = 0;
+    }
+    else {
+        float theta = acos((trace((float*)rot_mat, 3) - 1.0) / 2.0);
+        float w_mat_by_2[3][3];
+        float id[3][3];
+        float w_mat_sq[3][3];
+        float w_mat_sq_by_theta[3][3];
+        float s;
+        float term1[3][3];
+        float term2[3][3];
+        float term3[3][3];
+        float term4[3];
+        float p[3];
+
+        identity((float*)id, 3);
+        div_scalar((float*)mat, 2.0, 3, 3, (float*)w_mat_by_2);
+        mul_matrix((float*)w_mat, (float*)w_mat, 3, 3, 3, 3, (float*)w_mat_sq);
+        div_scalar((float*)w_mat_sq, theta, 3, 3, (float*)w_mat_sq_by_theta);
+        s = 1.0 / theta - 1.0 / tan(theta / 2.0) / 2.0;
+        
+        sub_matrix((float*)id, (float*)w_mat_by_2, 3, 3, (float*)term1);
+        mul_scalar((float*)w_mat_sq_by_theta, s, 3, 3, (float*)term2);
+        add_matrix((float*)term1, (float*)term2, 3, 3, (float*)term3);
+
+        term4[0] = mat[4 * 0 + 3];
+        term4[1] = mat[4 * 1 + 3];
+        term4[2] = mat[4 * 2 + 3];
+
+        mul_vector((float*)term3, term4, 3, 3, p);
+
+        create_trn_mat((float*)w_mat, p, (float*)result);
+        result[4 * 3 + 3] = 0;
+    }
 }
 
 // Vector methods
