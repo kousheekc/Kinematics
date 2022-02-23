@@ -732,6 +732,7 @@ def IKinSpace(Slist, M, T, thetalist0, eomg, ev):
                 se3ToVec(MatrixLog6(np.dot(TransInv(Tsb), T))))
     err = np.linalg.norm([Vs[0], Vs[1], Vs[2]]) > eomg \
           or np.linalg.norm([Vs[3], Vs[4], Vs[5]]) > ev
+
     while err and i < maxiterations:
         thetalist = thetalist \
                     + np.dot(np.linalg.pinv(JacobianSpace(Slist, \
@@ -745,18 +746,20 @@ def IKinSpace(Slist, M, T, thetalist0, eomg, ev):
     return (thetalist, not err)
 
 
-M = np.array([[0, 0, 1, 374],
-              [0, -1, 0, 0],
-              [1, 0, 0, 630],
-              [0, 0, 0, 1]])
-Slist = np.array([[0, 0, 1, 0, 0, 0],
-                  [0, 1, 0, -290, 0, 0],
-                  [0, 1, 0, -560, 0, 0],
-                  [1, 0, 0, 0, 630, 0],
-                  [0, 1, 0, -302, 0, 630],
-                  [1, 0, 0, 0, 630, 0]]).T
-thetalist = np.array([0, 0, 0, 0, 0, 0])
+Slist = np.array([[0, 0,  1,  4, 0,    0],
+                    [0, 0,  0,  0, 1,    0],
+                    [0, 0, -1, -6, 0, -0.1]]).T
+M = np.array([[-1, 0,  0, 0],
+                [ 0, 1,  0, 6],
+                [ 0, 0, -1, 2],
+                [ 0, 0,  0, 1]])
+T = np.array([[0, 1,  0,     -5],
+                [1, 0,  0,      4],
+                [0, 0, -1, 1.6858],
+                [0, 0,  0,      1]])
+thetalist0 = np.array([1.5, 2.5, 3])
+eomg = 0.01
+ev = 0.001
 
 
-
-print(np.round(FKinSpace(M, Slist, thetalist), 2))
+print(IKinSpace(Slist, M, T, thetalist0, eomg, ev))

@@ -4,43 +4,6 @@ MatrixUtils::MatrixUtils() {
   
 }
 
-// Create matrix and vector
-float** MatrixUtils::create_matrix(int r, int c) {
-    float** result = new float*[r];
-
-    for (int i = 0; i < r; i++) {
-        result[i] = new float[c];
-        for (int j = 0; j < c; j++) {
-            if (i == j) {
-                result[i][j] = 1;
-            }
-            else {
-                result[i][j] = 0;
-            }
-        }
-    }
-    return result;
-}
-
-int* MatrixUtils::create_vector(int n) {
-    int* result = new int[n];
-    for (int i = 0; i < n; i++) {
-        result[i] = 0;
-    }
-    return result;
-}
-
-void MatrixUtils::delete_matrix(float** mat, int r, int c) {
-    for(int i = 0; i < r; i++) {
-        delete[] mat[i];   
-    }
-    delete[] mat;
-}
-
-void MatrixUtils::delete_vector(int* vec, int n) {
-    delete [] vec;
-}
-
 // General matrix methods
 void MatrixUtils::print_matrix(float* mat, int r, int c, String message) { 
     Serial.println(message);
@@ -102,7 +65,7 @@ float MatrixUtils::trace(float* mat, int r) {
 int MatrixUtils::inverse(float* A, int n) {
     int pivrow = 0;
     int k, i, j; 
-    int* pivrows = create_vector(n);
+    int pivrows[6];
     float tmp;
 
     for (k = 0; k < n; k++) {
@@ -116,7 +79,6 @@ int MatrixUtils::inverse(float* A, int n) {
 
         if (A[pivrow * n + k] == 0.0f) {
             Serial.println("Inversion failed due to singular matrix");
-            delete_vector(pivrows, n);
             return 0;
         }
 
@@ -156,36 +118,29 @@ int MatrixUtils::inverse(float* A, int n) {
             }
         }
     }
-    delete_vector(pivrows, n);
     return 1;
 }
 
 void MatrixUtils::pseudo_inverse(float* mat, int r, int c, float* result) {
-    float** A_t = create_matrix(c, r);
+    float A_t[3][6];
     transpose((float*)mat, r, c, (float*)A_t);
 
     if (r < c) {
         // A+ = A_t * (A * A_t)^-1
-        float** AA_t = create_matrix(r, r);
+        float AA_t[6][6];
      
         mul_matrix((float*)mat, (float*)A_t, r, c, c, r, (float*)AA_t);
         inverse((float*)AA_t, r);
         mul_matrix((float*)A_t, (float*)AA_t, c, r, r, r, (float*)result);
-
-        delete_matrix(AA_t, r, r);
     }
     else {
         // A+ = (A_t * A)^-1 * A_t
-        float** A_tA = create_matrix(c, c);
+        float A_tA[3][3];
 
         mul_matrix((float*)A_t, (float*)mat, c, r, r, c, (float*)A_tA);
         inverse((float*)A_tA, c);
         mul_matrix((float*)A_tA, (float*)A_t, c, c, c, r, (float*)result);
-
-        delete_matrix(A_tA, c, c);
     }
-
-    delete_matrix(A_t, c, r);
 }
 
 // Transformation matrix methods
@@ -226,8 +181,8 @@ void MatrixUtils::trn_mat_inverse(float* mat, float* result) {
     transpose((float*)rot_mat, 3, 3, (float*)rot_mat_t);
     mul_vector((float*)rot_mat_t, pos_vec, 3, 3, pos_vec_result);
     pos_vec_result[0] = -pos_vec_result[0];
-    pos_vec_result[0] = -pos_vec_result[0];
-    pos_vec_result[0] = -pos_vec_result[0];
+    pos_vec_result[1] = -pos_vec_result[1];
+    pos_vec_result[2] = -pos_vec_result[2];
     create_trn_mat((float*)rot_mat_t, pos_vec_result, (float*)result);
 }
 
@@ -426,7 +381,7 @@ void MatrixUtils::log6(float* mat, float* result) {
         float p[3];
 
         identity((float*)id, 3);
-        div_scalar((float*)mat, 2.0, 3, 3, (float*)w_mat_by_2);
+        div_scalar((float*)w_mat, 2.0, 3, 3, (float*)w_mat_by_2);
         mul_matrix((float*)w_mat, (float*)w_mat, 3, 3, 3, 3, (float*)w_mat_sq);
         div_scalar((float*)w_mat_sq, theta, 3, 3, (float*)w_mat_sq_by_theta);
         s = 1.0 / theta - 1.0 / tan(theta / 2.0) / 2.0;

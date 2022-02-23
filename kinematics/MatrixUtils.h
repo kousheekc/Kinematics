@@ -8,12 +8,6 @@ class MatrixUtils {
 
     public:
         MatrixUtils();
-
-        // Create matrix and vector
-        float** create_matrix(int r, int c);
-        int* create_vector(int n);
-        void delete_matrix(float** mat, int r, int c);
-        void delete_vector(int* vec, int n);
         
         // General matrix methods
         void print_matrix(float* mat, int r, int c, String message="");

@@ -24,7 +24,7 @@ void setup() {
         {0, 0,  0,      1}
     };
 
-    float thetalist0[3] = {1.5, 2.5, 3};
+    float thetalist0[3] = {1.0, 2.5, 3};
     float thetalist[3];
 
     kin.inverse((float*)T, thetalist0, 0.01, 0.001, 20, thetalist);
