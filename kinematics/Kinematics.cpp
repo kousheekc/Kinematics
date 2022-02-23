@@ -62,7 +62,7 @@ void Kinematics::forward(float* joint_angles, float* transform) {
     }
 }
 
-void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew, float ev, float max_iterations, float* joint_angles) {
+void Kinematics::inverse(float* transform, float* jac, float* pinv, float* initial_joint_angles, float ew, float ev, float max_iterations, float* joint_angles) {
     float Tsb[4][4];
     float Tsb_inv[4][4];
     float Tsb_inv_T[4][4];
@@ -72,13 +72,11 @@ void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew
     float Vs[6];
     float w[3];
     float v[3];
-    float jac[6][3];
-    float pinv[3][6];
     float pinv_Vs[6];
     bool error;
     int i;
 
-    mat_utils.copy_matrix(initial_joint_angles, 1, 3, joint_angles);
+    mat_utils.copy_matrix(initial_joint_angles, 1, num_of_joints, joint_angles);
     forward(joint_angles, (float*)Tsb);
     mat_utils.trn_mat_inverse((float*)Tsb, (float*)Tsb_inv);
     mat_utils.mul_matrix((float*)Tsb_inv, (float*)transform, 4, 4, 4, 4, (float*)Tsb_inv_T);
@@ -101,9 +99,9 @@ void Kinematics::inverse(float* transform, float* initial_joint_angles, float ew
     while (error && i < max_iterations) {
         Serial.println(i);
         jacobian(joint_angles, (float*)jac);
-        mat_utils.pseudo_inverse((float*)jac, 6, 3, (float*)pinv);
+        mat_utils.pseudo_inverse((float*)jac, 6, num_of_joints, (float*)pinv);
         mat_utils.mul_vector((float*)pinv, Vs, num_of_joints, 6, pinv_Vs);
-        mat_utils.add_matrix(joint_angles, pinv_Vs, 1, 3, joint_angles);
+        mat_utils.add_matrix(joint_angles, pinv_Vs, 1, num_of_joints, joint_angles);
 
         i = i + 1;
 
@@ -137,13 +135,13 @@ void Kinematics::jacobian(float* joint_angles, float* jacobian) {
     float adj[6][6];
     float jacobian_column[6];
 
-    mat_utils.zero((float*)jacobian, 6, 3);
+    mat_utils.zero((float*)jacobian, 6, num_of_joints);
 
     mat_utils.identity((float*)transform, 4);
     
     for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 3; j++) {
-            jacobian[3 * i + j] = joint_screw_axes[j][i];
+        for (int j = 0; j < num_of_joints; j++) {
+            jacobian[num_of_joints * i + j] = joint_screw_axes[j][i];
         }
     }
 
@@ -157,7 +155,7 @@ void Kinematics::jacobian(float* joint_angles, float* jacobian) {
         mat_utils.adjoint((float*)transform, (float*)adj);
         mat_utils.mul_vector((float*)adj, joint_screw_axes[i], 6, 6, jacobian_column);
         for (int j = 0; j < 6; j++) {
-            jacobian[3 * j + i] = jacobian_column[j];
+            jacobian[num_of_joints * j + i] = jacobian_column[j];
         }
     }
 }

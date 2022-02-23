@@ -24,10 +24,13 @@ void setup() {
         {0, 0,  0,      1}
     };
 
+    float jac[6][3];
+    float pinv[3][6];
+
     float thetalist0[3] = {1.0, 2.5, 3};
     float thetalist[3];
 
-    kin.inverse((float*)T, thetalist0, 0.01, 0.001, 20, thetalist);
+    kin.inverse((float*)T, (float*)jac, (float*)pinv, thetalist0, 0.01, 0.001, 20, thetalist);
     mat_utils.print_matrix(thetalist, 1, 3, "Joint angles");
 
     // kin.add_joint_axis(0, 0, 1, 0, 0, 0);
