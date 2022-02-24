@@ -97,6 +97,7 @@ void Kinematics::inverse(float* transform, float* jac, float* pinv, float* A_t, 
     i = 0;
     
     while (error && i < max_iterations) {
+        Serial.print("loop\t");
         Serial.println(i);
         jacobian(joint_angles, (float*)jac);
         mat_utils.pseudo_inverse((float*)jac, (float*)A_t, (float*)AA_t, (float*)A_tA, 6, num_of_joints, (float*)pinv);

@@ -78,7 +78,7 @@ int MatrixUtils::inverse(float* A, int n) {
         }
 
         if (A[pivrow * n + k] == 0.0f) {
-            Serial.println("Inversion failed due to singular matrix");
+//            Serial.println("Inversion failed due to singular matrix");
             return 0;
         }
 
@@ -123,16 +123,18 @@ int MatrixUtils::inverse(float* A, int n) {
 
 void MatrixUtils::pseudo_inverse(float* mat, float* A_t, float* AA_t, float* A_tA, int r, int c, float* result) {
     transpose((float*)mat, r, c, (float*)A_t);
+    
+    mul_matrix((float*)mat, (float*)A_t, r, c, c, r, (float*)AA_t);
+    mul_matrix((float*)A_t, (float*)mat, c, r, r, c, (float*)A_tA);
+    
+    int AA_t_inv_res = inverse((float*)AA_t, r);
+    int A_tA_inv_res = inverse((float*)A_tA, c);
 
-    if (r < c) {
+    if (AA_t_inv_res == 1) {
         // A+ = A_t * (A * A_t)^-1
-        mul_matrix((float*)mat, (float*)A_t, r, c, c, r, (float*)AA_t);
-        inverse((float*)AA_t, r);
         mul_matrix((float*)A_t, (float*)AA_t, c, r, r, r, (float*)result);
     }
     else {
-        mul_matrix((float*)A_t, (float*)mat, c, r, r, c, (float*)A_tA);
-        inverse((float*)A_tA, c);
         mul_matrix((float*)A_tA, (float*)A_t, c, c, c, r, (float*)result);
     }
 }
