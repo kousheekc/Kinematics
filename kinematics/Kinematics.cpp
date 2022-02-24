@@ -62,7 +62,7 @@ void Kinematics::forward(float* joint_angles, float* transform) {
     }
 }
 
-void Kinematics::inverse(float* transform, float* jac, float* pinv, float* initial_joint_angles, float ew, float ev, float max_iterations, float* joint_angles) {
+void Kinematics::inverse(float* transform, float* jac, float* pinv, float* A_t, float* AA_t, float* A_tA, float* initial_joint_angles, float ew, float ev, float max_iterations, float* joint_angles) {
     float Tsb[4][4];
     float Tsb_inv[4][4];
     float Tsb_inv_T[4][4];
@@ -99,7 +99,7 @@ void Kinematics::inverse(float* transform, float* jac, float* pinv, float* initi
     while (error && i < max_iterations) {
         Serial.println(i);
         jacobian(joint_angles, (float*)jac);
-        mat_utils.pseudo_inverse((float*)jac, 6, num_of_joints, (float*)pinv);
+        mat_utils.pseudo_inverse((float*)jac, (float*)A_t, (float*)AA_t, (float*)A_tA, 6, num_of_joints, (float*)pinv);
         mat_utils.mul_vector((float*)pinv, Vs, num_of_joints, 6, pinv_Vs);
         mat_utils.add_matrix(joint_angles, pinv_Vs, 1, num_of_joints, joint_angles);
 
