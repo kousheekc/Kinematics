@@ -746,20 +746,26 @@ def IKinSpace(Slist, M, T, thetalist0, eomg, ev):
     return (thetalist, not err)
 
 
-Slist = np.array([[0, 0,  1,  4, 0,    0],
-                    [0, 0,  0,  0, 1,    0],
-                    [0, 0, -1, -6, 0, -0.1]]).T
-M = np.array([[-1, 0,  0, 0],
-                [ 0, 1,  0, 6],
-                [ 0, 0, -1, 2],
-                [ 0, 0,  0, 1]])
-T = np.array([[0, 1,  0,     -5],
-                [1, 0,  0,      4],
-                [0, 0, -1, 1.6858],
-                [0, 0,  0,      1]])
-thetalist0 = np.array([1.5, 2.5, 3])
+Slist = np.array([[0, 0, 1, 0, 0, 0],
+                    [0, 1, 0, -290, 0, 0],
+                    [0, 1, 0, -560, 0, 0],
+                    [1, 0, 0, 0, 630, 0],
+                    [0, 1, 0, -302, 0, 630],
+                    [1, 0, 0, 0, 630, 0]]).T
+M = np.array([[0,  0,  1, 374],
+                [0, -1,  0, 0],
+                [1,  0,  0, 630],
+                [0,  0,  0, 1]])
+T = np.array([[0,  0,  1, 374],
+                [0, -1,  0, 0],
+                [1,  0,  0, 500],
+                [0,  0,  0, 1]])
+
+thetalist0 = np.array([0, 0, 0, 0, 0, 0])
 eomg = 0.01
 ev = 0.001
 
 
-print(IKinSpace(Slist, M, T, thetalist0, eomg, ev))
+joint_angles = IKinSpace(Slist, M, T, thetalist0, eomg, ev)
+
+print(np.round(np.rad2deg(joint_angles[0]), 2))

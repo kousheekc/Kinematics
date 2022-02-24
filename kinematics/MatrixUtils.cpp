@@ -121,22 +121,16 @@ int MatrixUtils::inverse(float* A, int n) {
     return 1;
 }
 
-void MatrixUtils::pseudo_inverse(float* mat, int r, int c, float* result) {
-    float A_t[3][6];
+void MatrixUtils::pseudo_inverse(float* mat, float* A_t, float* AA_t, float* A_tA, int r, int c, float* result) {
     transpose((float*)mat, r, c, (float*)A_t);
 
     if (r < c) {
         // A+ = A_t * (A * A_t)^-1
-        float AA_t[6][6];
-     
         mul_matrix((float*)mat, (float*)A_t, r, c, c, r, (float*)AA_t);
         inverse((float*)AA_t, r);
         mul_matrix((float*)A_t, (float*)AA_t, c, r, r, r, (float*)result);
     }
     else {
-        // A+ = (A_t * A)^-1 * A_t
-        float A_tA[3][3];
-
         mul_matrix((float*)A_t, (float*)mat, c, r, r, c, (float*)A_tA);
         inverse((float*)A_tA, c);
         mul_matrix((float*)A_tA, (float*)A_t, c, c, c, r, (float*)result);

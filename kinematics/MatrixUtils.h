@@ -16,11 +16,8 @@ class MatrixUtils {
         void zero(float* mat, int r, int c);
         void transpose(float* mat, int r, int c, float* result);
         float trace(float* mat, int r);
-        void get_cofactor(float* mat, int p, int q, int r, float* result);
-        float determinant(float* mat, int r);
-        void adj(float* mat, int r, float* result);
         int inverse(float* A, int n);
-        void pseudo_inverse(float* mat, int r, int c, float* result);
+        void pseudo_inverse(float* mat, float* A_t, float* AA_t, float* A_tA, int r, int c, float* result);
 
         // Transformation matrix methods
         void get_rot_mat(float* mat, float* rot_mat);
