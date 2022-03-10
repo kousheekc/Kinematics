@@ -1,27 +1,52 @@
 #######################################
-# Syntax Coloring Map For AccelStepper
+# Syntax Coloring Map For Kinematics
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-Kinematics 	KEYWORD1
+Kinematics  KEYWORD1
+MatrixUtils KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-moveToAngle	KEYWORD2
-moveToPosition 	KEYWORD2
-getPositions	KEYWORD2
-getAngles	KEYWORD2
-printPositions	KEYWORD2
-printAngles	KEYWORD2
-
-#######################################
-# Datatypes (LITERAL1)
-#######################################
-
-Position	LITERAL1
-Angle	LITERAL1
+add_joint_axis	                KEYWORD2
+add_initial_end_effector_pose   KEYWORD2
+forward	                        KEYWORD2
+getAngles	                    KEYWORD2
+inverse	                        KEYWORD2
+jacobian        	            KEYWORD2
+print_matrix                    KEYWORD2                    
+copy_matrix                     KEYWORD2
+identity                        KEYWORD2
+zero                            KEYWORD2
+transpose                       KEYWORD2
+trace                           KEYWORD2
+inverse                         KEYWORD2
+pseudo_inverse                  KEYWORD2
+get_rot_mat                     KEYWORD2
+get_pos_vec                     KEYWORD2
+create_trn_mat                  KEYWORD2
+trn_mat_inverse                 KEYWORD2
+adjoint                         KEYWORD2
+exp3                            KEYWORD2
+exp6                            KEYWORD2
+log3                            KEYWORD2
+log6                            KEYWORD2
+norm                            KEYWORD2
+get_angle                       KEYWORD2
+add_scalar                      KEYWORD2
+sub_scalar                      KEYWORD2
+mul_scalar                      KEYWORD2
+div_scalar                      KEYWORD2
+add_matrix                      KEYWORD2
+sub_matrix                      KEYWORD2
+mul_matrix                      KEYWORD2
+mul_vector                      KEYWORD2
+vec_to_so3                      KEYWORD2
+so3_to_vec                      KEYWORD2
+vec_to_se3                      KEYWORD2
+se3_to_vec                      KEYWORD2
