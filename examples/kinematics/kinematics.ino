@@ -51,7 +51,7 @@ void setup() {
     float T[4][4] = {
         {0,  0,  1, 374,},
         {0, -1,  0, 0},
-        {1,  0,  0, 600},
+        {1,  0,  0, 550},
         {0,  0,  0, 1}
     };
 
@@ -60,17 +60,20 @@ void setup() {
     float AA_t[6][6];
     float A_tA[6][6];
     float pinv[6][6];
+    float transform[4][4];
 
-    float thetalist0[6] = {0, 0, 0, 0, 0, 0};
+//    float thetalist0[6] = {0, -1.62, 16.53, 0, 0, 0};
+    float thetalist0[6] = {0, 0, 0, 0, PI/2, 0};
     float thetalist[6];
 
-    kin.inverse((float*)T, (float*)jac, (float*)pinv, (float*)jac_t, (float*)AA_t, (float*)A_tA, thetalist0, 0.01, 0.001, 20, thetalist);
-    mat_utils.print_matrix(thetalist, 1, 6, "Joint angles");
+//    for (int i = 0; i < 6; i++) {
+//      thetalist0[i] = thetalist0[i] * PI / 180.0;
+//    }
 
-    for (int i = 0; i < 6; i++) {
-      Serial.print(thetalist[i] * 180.0 / PI);
-      Serial.print("\t");
-    }
+//    kin.inverse((float*)T, (float*)jac, (float*)pinv, (float*)jac_t, (float*)AA_t, (float*)A_tA, thetalist0, 0.01, 0.001, 20, thetalist);
+//    mat_utils.print_matrix(thetalist, 1, 6, "Joint angles");
+    kin.forward(thetalist0, (float*)transform);
+    mat_utils.print_matrix((float*)transform, 4, 4, "T");
 }
 
 void loop() {

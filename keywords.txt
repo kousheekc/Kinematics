@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map For AccelStepper
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Kinematics 	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+moveToAngle	KEYWORD2
+moveToPosition 	KEYWORD2
+getPositions	KEYWORD2
+getAngles	KEYWORD2
+printPositions	KEYWORD2
+printAngles	KEYWORD2
+
+#######################################
+# Datatypes (LITERAL1)
+#######################################
+
+Position	LITERAL1
+Angle	LITERAL1
