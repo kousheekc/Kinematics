@@ -25,4 +25,4 @@ Kousheek Chakraborty - kousheekc@gmail.com
 Project Link: [https://github.com/kousheekc/Kinematics](https://github.com/kousheekc/Kinematics)
 
 ## Acknowledgments
-The library is inspired by the **Modern Robotics** course and the accompanying book by **Kevin M. Lynch** and **Frank C. Park**. Here is a link to the material: [http://hades.mech.northwestern.edu/index.php/Modern_Robotics] (http://hades.mech.northwestern.edu/index.php/Modern_Robotics)
+The library is inspired by the **Modern Robotics** course and the accompanying book by **Kevin M. Lynch** and **Frank C. Park**. Here is a link to the material: [http://hades.mech.northwestern.edu/index.php/Modern_Robotics](http://hades.mech.northwestern.edu/index.php/Modern_Robotics)
