@@ -17,7 +17,7 @@ The Arduino IDE is necessary to run Arduino scripts and program your Arduino boa
 To install the kinematics library on the Arduino IDE go to **Sketch -> Include Library -> Manage Libraries** and search for **Kinematics** in the search bar. Select the latest version and click **Install**.
 
 ## Usage
-The library consists of 2 primary classes. These classes along with the corresponding public methods are described below. Note that 2 examples scripts are also provided for forward and inverse kinematics. Refer to the [DOCS](DOCS) for more information on the classes and methods that are available.
+The library consists of 2 primary classes. These classes along with the corresponding public methods are described below. Note that 2 examples scripts are also provided for forward and inverse kinematics. Refer to the [DOCS](DOCS.txt) for more information on the classes and methods that are available.
 
 ## License
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
