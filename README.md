@@ -17,9 +17,11 @@ To install the kinematics library on the Arduino IDE go to **Sketch -> Include L
 ## Usage
 
 ## License
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 Kousheek Chakraborty - kousheekc@gmail.com
+
 Project Link: [https://github.com/kousheekc/Kinematics](https://github.com/kousheekc/Kinematics)
 
 ## Acknowledgments
