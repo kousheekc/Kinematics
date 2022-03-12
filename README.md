@@ -12,11 +12,14 @@ Steps to use the kinematics library in your project:
 The Arduino IDE is necessary to run Arduino scripts and program your Arduino board. The IDE can be downloaded at the following link: [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)
 
 ### Installation
+To install the kinematics library on the Arduino IDE go to **Sketch -> Include Library -> Manage Libraries** and search for **Kinematics** in the search bar. Select the latest version and click **Install**.
 
 ## Usage
 
 ## License
 
 ## Contact
+Kousheek Chakraborty - kousheekc@gmail.com
+Project Link: [https://github.com/kousheekc/Kinematics](https://github.com/kousheekc/Kinematics)
 
 ## Acknowledgments
