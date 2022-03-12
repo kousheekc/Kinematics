@@ -1,6 +1,8 @@
 ## Kinematics Library Usage Guide
 
 ### Kinematics Class
+This is the class that most users will be primarily interacting with.
+
 - **Include header file**
 ```c++
 #include "Kinematics.h"
@@ -85,4 +87,36 @@ float joint_angles[3] = {1.0, 2.5, 3};
 float jac[6][3];
 
 kinematics_object.jacobian(joint_angles, (float*)jac);
+```
+
+### MatrixUtils Class
+This class provides functionality for matrix manipulation and standard operations with matrices.
+
+**Note:** the methods from this class are primarily used for the backend computations for the Kinematics class and is therfore not intended for basic users. That said, the class provides some useful functionality for debugging and these methods are described below. The rest are quite self explanatory.
+
+- **Include header file**
+```c++
+#include "MatrixUtils.h"
+```
+
+- **Create MatrixUtils object**
+```c++
+MatrixUtils mat_utils_object;
+```
+
+- **print_matrix** - prints a matrix in the serial monitor
+- **Parameters**
+  - (float*) matrix that you would like to print
+  - (int) number of rows of the matrix
+  - (int) number of columns of the matrix
+  - (String) message describing the matrix
+```c++
+float M[4][4] = {
+    {0, 1,  0,     -5},
+    {1, 0,  0,      4},
+    {0, 0, -1, 1.6858},
+    {0, 0,  0,      1}
+};
+
+mat_utils_object.print_matrix((float*)M, 4, 4, "This is the matrix M");
 ```
