@@ -3,6 +3,8 @@
 ## About The Project
 **Description**: This repository contains a kinematics library for the Arduino platform. The library can be used for various robotics projects to solve kinematics equations such as forward kinematics and inverse kinematics. In addition the library provides tools to compute the Jacobian of the system which can further be used to solve velocity kinematics or statics and dynamics equations.
 
+**Method**: The library uses the **joint screw axes** of the kinematics chain and the **end effector pose at the zero configuration** to determine the kinematics relation between the joint angles and the end effector pose. To solve inverse kinematics, the library uses the **Newton-Raphson Algorithm** which is an iterative numerical algorithm to find the roots of non linear equations.
+
 Here is a GIF of the kinematics library being used to control a small scale 6 DOF manipulator arm built using servo motors and 3D printed parts.
 
 ## Getting Started
