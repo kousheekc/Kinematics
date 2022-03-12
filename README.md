@@ -9,7 +9,7 @@ Here is a GIF of the kinematics library being used to control a small scale 6 DO
 Steps to use the kinematics library in your project:
 
 ### Prerequisites
-The Arduino IDE is necessary to run Arduino scripts and program your Arduino board. The IDE can be downloaded at the following link: [Link to Google](https://www.google.com)
+The Arduino IDE is necessary to run Arduino scripts and program your Arduino board. The IDE can be downloaded at the following link: [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)
 
 ### Installation
 
