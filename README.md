@@ -25,6 +25,11 @@ The library consists of 2 primary classes. These classes along with the correspo
 #include "Kinematics.h"
 ```
 - Define a Kinematics object
+- Parameters
+  - Number of joints
+```c++
+Kinematics kinematics_object(3);
+```
 
 ## License
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
