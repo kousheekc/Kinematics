@@ -1,7 +1,10 @@
 # Kinematics
 
 ## Video Demo
-Here is a demo of the kinematics library being used as an inverse kinematic controller for a 6DOF 
+Here is a demo of the kinematics library being used as an inverse kinematic controller for a 3D printed 6DOF micro manipulator arm. The arm consists of 6 servo motors and an Arduino Due microcontroller which runs the IK controller using the Kinematics library and sets the joint angles of the servo motors using PWM signals. 
+
+Click on the image below to watch a video which shows the controller jogging the end effector in the cartesian space.
+
 [![VIDEO](http://img.youtube.com/vi/zitple-wJlo/0.jpg)](http://www.youtube.com/watch?v=zitple-wJlo "Open Source Kinematics Library for Arduino based Microncontrollers")
 
 ## About The Project
