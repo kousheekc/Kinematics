@@ -1,5 +1,7 @@
 # Kinematics
 
+## Video Demo
+Here is a demo of the kinematics library being used as an inverse kinematic controller for a 6DOF 
 [![VIDEO](http://img.youtube.com/vi/zitple-wJlo/0.jpg)](http://www.youtube.com/watch?v=zitple-wJlo "Open Source Kinematics Library for Arduino based Microncontrollers")
 
 ## About The Project
