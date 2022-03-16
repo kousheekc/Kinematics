@@ -1,5 +1,7 @@
 # Kinematics
 
+[![VIDEO](http://img.youtube.com/vi/zitple-wJlo/0.jpg)](http://www.youtube.com/watch?v=zitple-wJlo "Open Source Kinematics Library for Arduino based Microncontrollers")
+
 ## About The Project
 **Description**: This repository contains a kinematics library for the Arduino platform. The library can be used for various robotics projects to solve kinematics equations such as forward kinematics and inverse kinematics. In addition the library provides tools for matrix manipulation, standard operators for matrices and the computation of the Jacobian which can further be used to solve velocity kinematics or statics and dynamics equations.
 
